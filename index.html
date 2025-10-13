@@ -3,71 +3,83 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gallop</title>
+    <title>Gallop | Collaboration at Full Speed</title>
     <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/style.css">
     <link rel="icon" href="assets/gallop-favicon.svg" type="image/svg+xml">
+    <link rel="stylesheet" href="css/header.css">
+    <link rel="stylesheet" href="css/footer.css">
 </head>
 <body>
 
     <div id="header-placeholder"></div>
 
     <main>
-        <section class="py-5">
-            <div class="container text-center">
-                <div class="row py-lg-5">
-                    <div class="col-lg-8 col-md-10 mx-auto">
-                        <img src="assets/Gallop-Project-Logo.svg" alt="Gallop Main Logo" class="img-fluid mb-4" style="max-height: 120px;">
-                        <h1 class="fw-bold">Collaboration at Full Speed</h1>
-                        <p class="lead text-muted">Where your ideas gain momentum and your work takes flight at full speed. Built for fast-paced collaboration and focused work.</p>
-                        <p>
-                            <a href="#" class="btn btn-primary btn-lg my-2 rounded-pill px-4">Find Your Space</a>
-                        </p>
+        <section class="container-fluid hero-section">
+            <div class="row">
+                <div class="col-lg-6 hero-text-panel">
+                    <div class="hero-content">
+                        <img src="assets/Gallop-Project-Logo.svg" alt="Gallop Main Logo" class="hero-logo mb-4">
+                        <h1 class="hero-title">Collaboration at Full Speed</h1>
+                        <p class="hero-lead">Where your ideas gain momentum and your work takes flight at full speed. Built for fast-paced collaboration and focused work.</p>
+                        <a href="#" class="btn btn-primary btn-lg mt-3">Find Your Space</a>
                     </div>
                 </div>
+                <div class="col-lg-6 hero-image-panel" style="background-image: url('assets/table-room.png');">
+                </div>
+            </div>
+        </section>
+
+        <section class="marquee-section">
+            <div class="marquee-content">
+                <span><i class="bi bi-lightning-charge-fill"></i> Fast-paced collaboration</span>
+                <span><i class="bi bi-clock-fill"></i> Flexible booking</span>
+                <span><i class="bi bi-cup-hot-fill"></i> Premium amenities</span>
+                <span><i class="bi bi-wifi"></i> High-speed connectivity</span>
+                <span><i class="bi bi-geo-alt-fill"></i> Central locations</span>
+                <span><i class="bi bi-lightning-charge-fill"></i> Fast-paced collaboration</span>
+                <span><i class="bi bi-clock-fill"></i> Flexible booking</span>
+                <span><i class="bi bi-cup-hot-fill"></i> Premium amenities</span>
+                <span><i class="bi bi-wifi"></i> High-speed connectivity</span>
+                <span><i class="bi bi-geo-alt-fill"></i> Central locations</span>
             </div>
         </section>
 
         <section class="album py-5 bg-light">
             <div class="container">
-                <h2 class="text-center mb-5 fw-bold">Our Workspaces</h2>
-                <div class="row row-cols-1 row-cols-md-3 g-4">
-                    
-                    <div class="col">
-                        <div class="card h-100 shadow-sm border-0 card-accent-teal">
-                            <img src="assets/solo-room.png" class="card-img-top" alt="A quiet solo workspace">
-                            <div class="card-body">
-                                <h5 class="card-title fw-bold">Solo Space (1 Pax)</h5>
-                                <p class="card-text">The perfect quiet corner for individual focus and deep work.</p>
-                            </div>
-                            <div class="card-footer bg-transparent border-top-0 pb-3">
-                                <a href="#" class="btn btn-sm btn-outline-secondary">View Details</a>
+                <h2 class="text-center mb-5 fw-bold display-5 section-heading">Our Workspaces</h2>
+                <div class="row justify-content-center g-5 mt-4">
+                    <div class="col-lg-4 col-md-6">
+                        <div class="workspace-card card-solo">
+                            <div class="workspace-card-img" style="background-image: url('assets/solo-room.png');"></div>
+                            <div class="workspace-card-info">
+                                <h5 class="card-title fw-bold">Solo Space</h5>
+                                <p class="card-text">The perfect quiet corner for individual focus.</p>
+                                <a href="#" class="card-link">Book Now <i class="bi bi-arrow-right"></i></a>
                             </div>
                         </div>
                     </div>
-                    
-                    <div class="col">
-                         <div class="card h-100 shadow-sm border-0 card-accent-red">
-                            <img src="assets/table-room.png" class="card-img-top" alt="A collaborative table space">
-                            <div class="card-body">
-                                <h5 class="card-title fw-bold">Table Space (4-6 Pax)</h5>
-                                <p class="card-text">A collaborative hub for your team to brainstorm and build together.</p>
-                            </div>
-                            <div class="card-footer bg-transparent border-top-0 pb-3">
-                                <a href="#" class="btn btn-sm btn-outline-secondary">View Details</a>
+                    <div class="col-lg-4 col-md-6">
+                        <div class="workspace-card card-table">
+                            <div class="workspace-card-img" style="background-image: url('assets/table-room.png');"></div>
+                            <div class="workspace-card-info">
+                                <h5 class="card-title fw-bold">Table Space</h5>
+                                <p class="card-text">A collaborative hub for your team to build together.</p>
+                                <a href="#" class="card-link">Book Now <i class="bi bi-arrow-right"></i></a>
                             </div>
                         </div>
                     </div>
-
-                    <div class="col">
-                        <div class="card h-100 shadow-sm border-0 card-accent-teal">
-                            <img src="assets/board-room.png" class="card-img-top" alt="A professional board room">
-                            <div class="card-body">
-                                <h5 class="card-title fw-bold">Board Room (6-12 Pax)</h5>
-                                <p class="card-text">A professional setting for your most important meetings and presentations.</p>
-                            </div>
-                            <div class="card-footer bg-transparent border-top-0 pb-3">
-                                <a href="#" class="btn btn-sm btn-outline-secondary">View Details</a>
+                    <div class="col-lg-4 col-md-6">
+                        <div class="workspace-card card-board">
+                             <div class="workspace-card-img" style="background-image: url('assets/board-room.png');"></div>
+                            <div class="workspace-card-info">
+                                <h5 class="card-title fw-bold">Board Room</h5>
+                                <p class="card-text">A professional setting for your most important meetings.</p>
+                                <a href="#" class="card-link">Book Now <i class="bi bi-arrow-right"></i></a>
                             </div>
                         </div>
                     </div>

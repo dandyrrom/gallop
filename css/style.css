@@ -1,57 +1,350 @@
-/*
-  This is your custom stylesheet.
-  It's where you'll add your unique "Gallop" branding.
+/* 
+  Enhanced Gallop Branding Styles
+  More unique and impactful design
 */
 
-/* CSS Variables (:root)
-  Our new "Soft Wood" color palette.
-*/
 :root {
-    --gallop-brown: #8B4513; /* A rich, saddle brown */
-    --gallop-tan: #D2B48C;   /* A soft tan for accents */
-    --gallop-cream: #F5F5DC; /* A warm, inviting background color */
-    --gallop-dark: #343a40;
-}
-  
-/* 1. Re-apply the warm background to the entire page */
-body {
-    background-color: var(--gallop-cream);
-}
-  
-/* 2. Make the .bg-light class slightly different for a softer look */
-.bg-light {
-    background-color: #fdfdfd !important;
-}
-  
-/* Style Overrides for Bootstrap Components */
-.btn-primary {
-    background-color: var(--gallop-brown);
-    border-color: var(--gallop-brown);
-    font-weight: bold;
-}
-  
-.btn-primary:hover {
-    background-color: #A0522D; /* A slightly lighter, warmer brown for hover */
-    border-color: #A0522D;
-}
-  
-.navbar-nav .nav-link {
-    font-weight: 700;
-}
-  
-/* 3. Custom classes for our energetic card accents */
-.card-accent-teal {
-    border-top: 5px solid var(--gallop-tan);
-}
-  
-.card-accent-red {
-    border-top: 5px solid var(--gallop-brown);
+  --gallop-dark-wood: #5D4037;   /* A deep, rich coffee brown */
+  --gallop-accent: #FFC107;      /* A sharp, playful amber/gold */
+  --gallop-bg: #FDFBF8;          /* A very light, warm cream background */
+  --gallop-text: #4E342E;         /* A dark, earthy brown for text */
+  --gallop-light-accent: #FFF8E1; /* Light amber for backgrounds */
+  --gallop-serif: 'Playfair Display', serif;
+  --gallop-sans-serif: 'Roboto', sans-serif;
 }
 
-@media (min-width: 992px) {
-  .navbar-nav-centered {
-    position: absolute;
-    left: 50%;
-    transform: translateX(-50%);
+body {
+  background-color: var(--gallop-bg);
+  color: var(--gallop-text);
+  font-family: var(--gallop-sans-serif);
+  line-height: 1.7;
+}
+
+h1, h2, h3, h4, h5 {
+  font-family: var(--gallop-serif);
+  font-weight: 700;
+}
+
+/* Enhanced Hero Section */
+.hero-section {
+  min-height: 90vh;
+  padding: 0;
+  position: relative;
+  overflow: hidden;
+}
+
+.hero-section::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, rgba(255,248,225,0.3) 0%, rgba(255,193,7,0.1) 100%);
+  z-index: -1;
+}
+
+.hero-text-panel {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4rem;
+  position: relative;
+}
+
+.hero-content {
+  max-width: 500px;
+  position: relative;
+}
+
+.hero-logo {
+  max-height: 80px;
+  filter: grayscale(1) brightness(0.5);
+  margin-bottom: 2rem;
+  transition: all 0.5s ease;
+}
+
+.hero-content:hover .hero-logo {
+  filter: grayscale(0) brightness(0.7);
+  transform: scale(1.05);
+}
+
+.hero-image-panel {
+  background-size: cover;
+  background-position: center;
+  min-height: 400px;
+  position: relative;
+}
+
+.hero-image-panel::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(45deg, rgba(93,64,55,0.1) 0%, rgba(255,193,7,0.05) 100%);
+}
+
+.hero-title {
+  font-size: 3.5rem;
+  line-height: 1.1;
+  margin-bottom: 1.5rem;
+  position: relative;
+}
+
+.hero-title::after {
+  content: '';
+  position: absolute;
+  bottom: -10px;
+  left: 0;
+  width: 80px;
+  height: 4px;
+  background-color: var(--gallop-accent);
+  border-radius: 2px;
+}
+
+.hero-lead {
+  font-size: 1.25rem;
+  margin-bottom: 2rem;
+  color: var(--gallop-text);
+  opacity: 0.9;
+}
+
+/* Enhanced Marquee Section */
+.marquee-section {
+  background-color: var(--gallop-accent);
+  color: var(--gallop-dark-wood);
+  padding: 1.5rem 0;
+  overflow: hidden;
+  white-space: nowrap;
+  position: relative;
+}
+
+.marquee-section::before, .marquee-section::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  width: 100px;
+  height: 100%;
+  z-index: 2;
+}
+
+.marquee-section::before {
+  left: 0;
+  background: linear-gradient(to right, var(--gallop-accent) 0%, transparent 100%);
+}
+
+.marquee-section::after {
+  right: 0;
+  background: linear-gradient(to left, var(--gallop-accent) 0%, transparent 100%);
+}
+
+.marquee-content {
+  display: inline-block;
+  animation: marquee 25s linear infinite;
+  font-weight: 700;
+  font-size: 1.2rem;
+  font-family: var(--gallop-serif);
+}
+
+.marquee-content span {
+  margin: 0 2rem;
+  position: relative;
+}
+
+.marquee-content span::after {
+  content: '•';
+  position: absolute;
+  right: -1.5rem;
+  color: var(--gallop-dark-wood);
+}
+
+.marquee-content span:last-child::after {
+  display: none;
+}
+
+.marquee-content i {
+  margin-right: 0.5rem;
+  color: var(--gallop-dark-wood);
+}
+
+@keyframes marquee {
+  from { transform: translateX(0%); }
+  to { transform: translateX(-50%); }
+}
+
+/* Enhanced Button Overrides */
+.btn-primary {
+  background-color: var(--gallop-dark-wood);
+  border-color: var(--gallop-dark-wood);
+  font-family: var(--gallop-sans-serif);
+  font-weight: bold;
+  padding: 12px 30px;
+  border-radius: 50px;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+  z-index: 1;
+}
+
+.btn-primary::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 0%;
+  height: 100%;
+  background-color: var(--gallop-accent);
+  transition: all 0.3s ease;
+  z-index: -1;
+  border-radius: 50px;
+}
+
+.btn-primary:hover {
+  background-color: var(--gallop-dark-wood);
+  border-color: var(--gallop-dark-wood);
+  transform: translateY(-3px);
+  box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+  color: var(--gallop-dark-wood);
+}
+
+.btn-primary:hover::before {
+  width: 100%;
+}
+
+/* Enhanced Workspace Cards */
+.workspace-card {
+  position: relative;
+  border-radius: 16px;
+  border: none;
+  box-shadow: 0 10px 30px -10px rgba(0,0,0,0.1);
+  transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+  overflow: hidden;
+  background: transparent;
+}
+
+.workspace-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(to bottom, transparent 0%, rgba(0,0,0,0.1) 100%);
+  opacity: 0;
+  transition: opacity 0.4s ease;
+  z-index: 1;
+  border-radius: 16px;
+}
+
+.workspace-card:hover {
+  transform: translateY(-15px) scale(1.02);
+  box-shadow: 0 25px 50px -15px rgba(0,0,0,0.2);
+}
+
+.workspace-card:hover::before {
+  opacity: 1;
+}
+
+.workspace-card-img {
+  height: 350px;
+  background-size: cover;
+  background-position: center;
+  border-radius: 16px;
+  transition: all 0.5s ease;
+}
+
+.workspace-card:hover .workspace-card-img {
+  transform: scale(1.05);
+}
+
+.workspace-card-info {
+  position: absolute;
+  bottom: -20px;
+  left: 5%;
+  right: 5%;
+  background: #fff;
+  padding: 1.5rem;
+  border-radius: 12px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+  text-align: center;
+  border-top: 4px solid var(--gallop-accent);
+  z-index: 2;
+  transition: all 0.4s ease;
+}
+
+.workspace-card:hover .workspace-card-info {
+  bottom: -10px;
+  box-shadow: 0 15px 30px rgba(0,0,0,0.15);
+}
+
+.workspace-card.card-table .workspace-card-info {
+  border-top-color: var(--gallop-dark-wood);
+}
+
+.workspace-card .card-link {
+  text-decoration: none;
+  color: var(--gallop-dark-wood);
+  font-weight: bold;
+  transition: all 0.3s ease;
+  display: inline-flex;
+  align-items: center;
+}
+
+.workspace-card .card-link:hover {
+  color: var(--gallop-accent);
+}
+
+.workspace-card .card-link i {
+  transition: transform 0.3s ease;
+  display: inline-block;
+  margin-left: 5px;
+}
+
+.workspace-card .card-link:hover i {
+  transform: translateX(8px);
+}
+
+/* Section Headings */
+.section-heading {
+  position: relative;
+  display: inline-block;
+  margin-bottom: 3rem;
+}
+
+.section-heading::after {
+  content: '';
+  position: absolute;
+  bottom: -10px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 60px;
+  height: 3px;
+  background-color: var(--gallop-accent);
+  border-radius: 2px;
+}
+
+/* Animation for page load */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
   }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.hero-content, .workspace-card {
+  animation: fadeInUp 0.8s ease forwards;
+}
+
+.workspace-card:nth-child(2) {
+  animation-delay: 0.2s;
+}
+
+.workspace-card:nth-child(3) {
+  animation-delay: 0.4s;
 }
