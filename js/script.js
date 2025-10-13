@@ -16,15 +16,5 @@ document.addEventListener("DOMContentLoaded", function() {
     loadComponent('_includes/header.html', 'header-placeholder');
     loadComponent('_includes/footer.html', 'footer-placeholder');
 
-    // Add scroll event listener for the navbar
-    window.addEventListener('scroll', function() {
-        const navbar = document.getElementById('mainNav');
-        if (navbar) {
-            if (window.scrollY > 50) {
-                navbar.classList.add('navbar-scrolled');
-            } else {
-                navbar.classList.remove('navbar-scrolled');
-            }
-        }
-    });
+    // REMOVED the scroll event listener as it is no longer needed.
 });
