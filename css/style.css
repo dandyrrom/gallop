@@ -38,7 +38,7 @@ h1, h2, h3, h4, h5 {
 }
 
 .hero-section .row {
-    flex-grow: 1; /* This makes the content fill the available space */
+    flex-grow: 4; /* This makes the content fill the available space */
 }
 
 .hero-text-panel {
@@ -69,9 +69,9 @@ h1, h2, h3, h4, h5 {
     width: 100%;
     height: 100%;
     background: linear-gradient(to right, 
-        var(--gallop-bg) 5%, 
-        rgba(255, 255, 255, 0.8) 40%, 
-        rgba(255, 255, 255, 0) 60%
+        var(--gallop-bg) 1%, 
+        rgba(255, 255, 255, 1) 0.01%, 
+        rgba(255, 255, 255, 0) 50%
     );
     z-index: 1;
 }
@@ -126,42 +126,28 @@ h1, h2, h3, h4, h5 {
 }
 
 /* --- Workspace Cards --- */
-.workspace-card {
-    position: relative;
-    border-radius: 12px;
-    border: none;
-    box-shadow: 0 10px 30px -10px rgba(0,0,0,0.1);
-    transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+.workspace-feature {
+  margin-bottom: 5rem;
 }
-.workspace-card:hover {
-    transform: translateY(-15px);
-    box-shadow: 0 20px 40px -15px rgba(0,0,0,0.2);
+
+.workspace-feature h3 {
+  font-size: 2.5rem;
+  font-weight: bold;
+  color: var(--gallop-dark-wood);
+  margin-bottom: 1.5rem;
 }
-.workspace-card-img {
-    height: 350px;
-    background-size: cover;
-    background-position: center;
-    border-radius: 12px;
+
+.workspace-feature p {
+  font-size: 1.1rem;
+  line-height: 1.8;
+  color: var(--gallop-text);
 }
-.workspace-card-info {
-    position: absolute;
-    bottom: -20px;
-    left: 5%;
-    right: 5%;
-    background: #fff;
-    padding: 1.5rem;
-    border-radius: 12px;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-    text-align: center;
-    border-top: 4px solid var(--gallop-accent);
-}
-.workspace-card.card-table .workspace-card-info {
-    border-top-color: var(--gallop-dark-wood);
-}
-.workspace-card .card-link {
-    text-decoration: none;
-    color: var(--gallop-dark-wood);
-    font-weight: bold;
+
+.workspace-feature .btn {
+  margin-top: 1.5rem;
+  border-radius: 50px;
+  padding: 0.75rem 2rem;
+  font-weight: bold;
 }
 
 /* --- Footer --- */
