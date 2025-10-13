@@ -4,47 +4,54 @@
 */
 
 /* CSS Variables (:root)
-  Our "Vibrant Community" color palette.
+  Our new "Soft Wood" color palette.
 */
 :root {
-    --gallop-teal: #3ba99c;
-    --gallop-red: #f07167;
-    --gallop-cream: #fdf0d5; /* The warm, inviting background color */
+    --gallop-brown: #8B4513; /* A rich, saddle brown */
+    --gallop-tan: #D2B48C;   /* A soft tan for accents */
+    --gallop-cream: #F5F5DC; /* A warm, inviting background color */
     --gallop-dark: #343a40;
-  }
+}
   
-  /* 1. Re-apply the warm background to the entire page */
-  body {
+/* 1. Re-apply the warm background to the entire page */
+body {
     background-color: var(--gallop-cream);
-  }
+}
   
-  /* 2. Make the .bg-light class slightly different from pure white for a softer look */
-  .bg-light {
-      background-color: #f8f9fa !important; /* !important ensures we override Bootstrap's default */
-  }
+/* 2. Make the .bg-light class slightly different for a softer look */
+.bg-light {
+    background-color: #fdfdfd !important;
+}
   
-  
-  /* Style Overrides for Bootstrap Components */
-  .btn-primary {
-    background-color: var(--gallop-teal);
-    border-color: var(--gallop-teal);
+/* Style Overrides for Bootstrap Components */
+.btn-primary {
+    background-color: var(--gallop-brown);
+    border-color: var(--gallop-brown);
     font-weight: bold;
-  }
+}
   
-  .btn-primary:hover {
-    background-color: #318d81; /* A slightly darker teal for hover effect */
-    border-color: #318d81;
-  }
+.btn-primary:hover {
+    background-color: #A0522D; /* A slightly lighter, warmer brown for hover */
+    border-color: #A0522D;
+}
   
-  .navbar-nav .nav-link {
-      font-weight: 700;
-  }
+.navbar-nav .nav-link {
+    font-weight: 700;
+}
   
-  /* 3. NEW: Custom classes for our energetic card accents */
-  .card-accent-teal {
-      border-top: 5px solid var(--gallop-teal);
-  }
+/* 3. Custom classes for our energetic card accents */
+.card-accent-teal {
+    border-top: 5px solid var(--gallop-tan);
+}
   
-  .card-accent-red {
-      border-top: 5px solid var(--gallop-red);
+.card-accent-red {
+    border-top: 5px solid var(--gallop-brown);
+}
+
+@media (min-width: 992px) {
+  .navbar-nav-centered {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
   }
+}
