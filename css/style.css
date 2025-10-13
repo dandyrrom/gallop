@@ -1,7 +1,3 @@
-/* =========================================================
-   Gallop Project – Complete Stylesheet (Perfectly Flush Layout)
-   ========================================================= */
-
 /* --- Root Variables --- */
 :root {
   --gallop-dark-wood: #5D4037;
@@ -13,9 +9,7 @@
 }
 
 /* --- Base Styles --- */
-html, body {
-  margin: 0;
-  padding: 0;
+body {
   background-color: var(--gallop-bg);
   color: var(--gallop-text);
   font-family: var(--gallop-sans-serif);
@@ -25,235 +19,156 @@ h1, h2, h3, h4, h5 {
   font-family: var(--gallop-serif);
 }
 
-/* =========================================================
-   HERO SECTION – Flush with Header and Marquee
-   ========================================================= */
+/* --- Header Centering Fix --- */
+@media (min-width: 992px) {
+  .navbar-nav-centered {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+}
 
+/* --- Hero Section --- */
 .hero-section {
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-end;
-  min-height: 100vh;
-  background-color: var(--gallop-bg);
-  overflow: hidden;
-  margin: 0;
-  padding: 0;
-  width: 100vw; /* full edge-to-edge width */
+    height: 100vh; 
+    min-height: 700px;
+    background-color: var(--gallop-bg);
+    display: flex;
+    flex-direction: column; /* This is key for positioning the marquee */
 }
 
-/* Remove Bootstrap container-fluid padding */
-.hero-section.container-fluid,
-.hero-section > .row {
-  margin: 0 !important;
-  padding: 0 !important;
-  width: 100% !important;
-}
-
-/* Layout */
 .hero-section .row {
-  flex: 1;
-  display: flex;
-  align-items: center;
+    flex-grow: 1; /* This makes the content fill the available space */
 }
 
-/* Text Panel */
 .hero-text-panel {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 3rem 4rem;
-  z-index: 2;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem 4rem;
+    z-index: 2; 
 }
+.hero-content { max-width: 700px; }
+.hero-logo { max-height: 80px; }
 
-.hero-content {
-  max-width: 700px;
-}
-
-.hero-logo {
-  max-height: 80px;
-}
-
-/* Image Panel */
 .hero-image-panel {
-  background-size: cover;
-  background-position: center center;
-  position: relative;
-  min-height: 500px;
-  height: 100%;
-  margin: 0;
-  padding: 0;
+    position: absolute;
+    top: 0;
+    right: 0;
+    height: 100%;
+    width: 50%;
+    background-size: cover;
+    background-position: center;
 }
 
-/* Gradient Fade Overlay */
 .hero-image-panel::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(
-    to right,
-    var(--gallop-bg) 0%,
-    rgba(255, 255, 255, 0.8) 25%,
-    rgba(255, 255, 255, 0) 50%
-  );
-  z-index: 1;
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(to right, 
+        var(--gallop-bg) 5%, 
+        rgba(255, 255, 255, 0.8) 40%, 
+        rgba(255, 255, 255, 0) 60%
+    );
+    z-index: 1;
 }
 
-/* =========================================================
-   MARQUEE SECTION – Attached Seamlessly Under Hero
-   ========================================================= */
-
+/* --- Marquee Section --- */
 .marquee-section {
-  background-color: var(--gallop-accent);
-  color: var(--gallop-dark-wood);
-  padding: 1rem 0;
-  overflow: hidden;
-  white-space: nowrap;
-  border-top: 3px solid var(--gallop-dark-wood);
-  border-bottom: 3px solid var(--gallop-dark-wood);
-  width: 100vw;
-  margin: 0; /* remove any gap under hero */
-  position: relative;
-  z-index: 3;
-  display: block;
+    background-color: var(--gallop-accent);
+    color: var(--gallop-dark-wood);
+    padding: 1rem 0;
+    overflow: hidden;
+    white-space: nowrap;
+    border-top: 3px solid var(--gallop-dark-wood);
+    border-bottom: 3px solid var(--gallop-dark-wood);
 }
-
-/* Marquee Animation */
 .marquee-content {
-  display: inline-block;
-  animation: marquee 25s linear infinite;
-  font-weight: 700;
-  font-size: 1.2rem;
+    display: inline-block;
+    animation: marquee 30s linear infinite;
+    font-weight: 700;
+    font-size: 1.2rem;
 }
-
-.marquee-content span {
-  margin: 0 2rem;
-}
-
-.marquee-content i {
-  margin-right: 0.5rem;
-}
-
+.marquee-content span { margin: 0 2rem; }
+.marquee-content i { margin-right: 0.5rem; }
 @keyframes marquee {
-  from { transform: translateX(0%); }
-  to { transform: translateX(-50%); }
+    from { transform: translateX(0%); }
+    to { transform: translateX(-50%); }
 }
 
-/* =========================================================
-   BUTTONS
-   ========================================================= */
-
+/* --- Button Overrides --- */
 .btn-primary {
-  background-color: var(--gallop-dark-wood);
-  border-color: var(--gallop-dark-wood);
-  font-family: var(--gallop-sans-serif);
-  font-weight: bold;
-  border-radius: 50px;
-  transition: all 0.3s ease;
+    background-color: var(--gallop-dark-wood);
+    border-color: var(--gallop-dark-wood);
+    font-family: var(--gallop-sans-serif);
+    font-weight: bold;
+    border-radius: 50px;
+    transition: all 0.3s ease;
 }
-
 .btn-primary:hover {
-  background-color: var(--gallop-text);
-  border-color: var(--gallop-text);
-  transform: translateY(-3px);
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    background-color: var(--gallop-text);
+    border-color: var(--gallop-text);
+    transform: translateY(-3px);
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
 }
 
 .btn-outline-dark {
-  border-color: var(--gallop-dark-wood);
-  color: var(--gallop-dark-wood);
+    border-color: var(--gallop-dark-wood);
+    color: var(--gallop-dark-wood);
 }
 
 .btn-outline-dark:hover {
-  background-color: var(--gallop-dark-wood);
-  color: white;
+    background-color: var(--gallop-dark-wood);
+    color: white;
 }
 
-/* =========================================================
-   WORKSPACE CARDS
-   ========================================================= */
-
+/* --- Workspace Cards --- */
 .workspace-card {
-  position: relative;
-  border-radius: 12px;
-  border: none;
-  box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.1);
-  transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
-}
-
-.workspace-card:hover {
-  transform: translateY(-15px);
-  box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.2);
-}
-
-.workspace-card-img {
-  height: 350px;
-  background-size: cover;
-  background-position: center;
-  border-radius: 12px;
-}
-
-.workspace-card-info {
-  position: absolute;
-  bottom: -20px;
-  left: 5%;
-  right: 5%;
-  background: #fff;
-  padding: 1.5rem;
-  border-radius: 12px;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-  text-align: center;
-  border-top: 4px solid var(--gallop-accent);
-}
-
-.workspace-card.card-table .workspace-card-info {
-  border-top-color: var(--gallop-dark-wood);
-}
-
-.workspace-card .card-link {
-  text-decoration: none;
-  color: var(--gallop-dark-wood);
-  font-weight: bold;
-}
-
-/* =========================================================
-   FOOTER
-   ========================================================= */
-
-footer {
-  background-color: var(--gallop-bg);
-  border-top: 1px solid rgba(93, 64, 55, 0.1);
-}
-
-footer h5 {
-  color: var(--gallop-dark-wood);
-}
-
-/* =========================================================
-   RESPONSIVE ADJUSTMENTS
-   ========================================================= */
-
-@media (max-width: 991.98px) {
-  .hero-section {
-    min-height: auto;
-  }
-
-  .hero-section .row {
-    flex-direction: column;
-  }
-
-  .hero-image-panel {
-    width: 100%;
-    height: 300px;
-  }
-
-  .marquee-section {
     position: relative;
-    border-top: 3px solid var(--gallop-dark-wood);
-  }
+    border-radius: 12px;
+    border: none;
+    box-shadow: 0 10px 30px -10px rgba(0,0,0,0.1);
+    transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+.workspace-card:hover {
+    transform: translateY(-15px);
+    box-shadow: 0 20px 40px -15px rgba(0,0,0,0.2);
+}
+.workspace-card-img {
+    height: 350px;
+    background-size: cover;
+    background-position: center;
+    border-radius: 12px;
+}
+.workspace-card-info {
+    position: absolute;
+    bottom: -20px;
+    left: 5%;
+    right: 5%;
+    background: #fff;
+    padding: 1.5rem;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    text-align: center;
+    border-top: 4px solid var(--gallop-accent);
+}
+.workspace-card.card-table .workspace-card-info {
+    border-top-color: var(--gallop-dark-wood);
+}
+.workspace-card .card-link {
+    text-decoration: none;
+    color: var(--gallop-dark-wood);
+    font-weight: bold;
+}
 
-  .marquee-content {
-    font-size: 1.1rem;
-    animation-duration: 20s;
-  }
+/* --- Footer --- */
+footer {
+    background-color: var(--gallop-bg);
+    border-top: 1px solid rgba(93, 64, 55, 0.1);
+}
+footer h5 {
+    color: var(--gallop-dark-wood);
 }
