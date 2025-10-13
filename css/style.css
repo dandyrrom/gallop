@@ -50,7 +50,7 @@ h1, h2, h3, h4, h5 {
     z-index: 2; 
 }
 .hero-content { max-width: 700px; }
-.hero-logo { max-height: 80px; }
+.hero-logo { max-height: 170px; }
 
 .hero-image-panel {
     position: absolute;
