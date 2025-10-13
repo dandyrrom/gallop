@@ -1,0 +1,83 @@
+/* --- Our Spaces Page Styles --- */
+.spaces-page {
+    padding-top: 45px; /* Offset for the fixed header */
+}
+
+.workspace-listing {
+    display: flex; /* Use flexbox for the card itself */
+    background-color: #fff;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 10px 30px -15px rgba(0,0,0,0.1);
+    margin-bottom: 3rem; /* Reduced margin */
+    border: 1px solid rgba(0,0,0,0.05);
+    transition: all 0.3s ease-in-out;
+    min-height: 350px; /* Minimum height for consistency */
+}
+
+.workspace-listing:hover {
+    box-shadow: 0 20px 40px -15px rgba(0,0,0,0.2);
+    transform: translateY(-5px);
+}
+
+.workspace-listing-image {
+    background-size: cover;
+    background-position: center;
+    min-height: 250px; /* Ensure image is visible on mobile */
+}
+
+.workspace-listing-details {
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.workspace-listing-details h2 {
+    color: var(--gallop-dark-wood);
+    margin-bottom: 0.5rem;
+}
+
+.workspace-listing-details h5 {
+    font-weight: bold;
+    color: var(--gallop-dark-wood);
+    margin-top: 1rem; /* Added space */
+    margin-bottom: 0.75rem;
+}
+
+.price-tag {
+    font-size: 1.1rem;
+    font-weight: bold;
+    color: var(--gallop-accent);
+    padding: 0.3rem 0.85rem; /* Adjusted padding */
+    display: inline; /* Changed from inline-block */
+    margin-bottom: 1rem;
+}
+
+.price-rate {
+    font-weight: normal;
+    opacity: 0.8;
+    font-size: 0.9rem;
+}
+
+
+.features-list {
+    list-style: none;
+    padding: 0;
+    margin-top: 0;
+}
+
+.features-list li {
+    font-size: 1rem; /* Smaller font for features */
+    margin-bottom: 0.5rem; /* Tighter spacing */
+    display: flex;
+    align-items: center;
+    color: var(--gallop-text);
+}
+
+.features-list i {
+    color: var(--gallop-dark-wood);
+    margin-right: 0.75rem;
+    font-size: 1.2rem;
+    width: 20px; /* Align icons */
+}

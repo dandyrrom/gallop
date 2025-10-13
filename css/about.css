@@ -1,0 +1,65 @@
+/* --- About Page Styles --- */
+.about-page {
+    padding-top: 60px;
+}
+
+.about-header {
+    background-color: var(--gallop-bg);
+    padding: 4rem 0;
+    border-bottom: 1px solid #eee;
+}
+
+.about-section {
+    padding: 5rem 0;
+}
+
+.section-title {
+    font-family: var(--gallop-serif);
+    font-weight: 700;
+    color: var(--gallop-dark-wood);
+    margin-bottom: 1.5rem;
+}
+
+.about-section p {
+    font-size: 1.1rem;
+    line-height: 1.8;
+}
+
+/* Values Section */
+.value-card {
+    background-color: #fff;
+    padding: 2rem;
+    border-radius: 8px;
+    height: 100%;
+    border: 1px solid #eee;
+}
+
+.value-icon {
+    font-size: 3rem;
+    color: var(--gallop-dark-wood);
+    margin-bottom: 1rem;
+}
+
+.value-card h5 {
+    font-family: var(--gallop-serif);
+    font-weight: 700;
+    color: var(--gallop-dark-wood);
+}
+
+/* Join Us Section */
+.join-section .section-title {
+    color: #fff;
+}
+
+.join-section .btn-primary {
+    background-color: var(--gallop-accent);
+    border-color: var(--gallop-accent);
+    color: var(--gallop-dark-wood);
+    font-weight: bold;
+}
+
+.join-section .btn-primary:hover {
+    background-color: #ffca2c;
+    border-color: #ffca2c;
+    transform: translateY(-3px);
+}

@@ -9,8 +9,9 @@
 }
 
 /* --- Base Styles --- */
+/* --- Base Styles --- */
 body {
-  background-color: var(--gallop-bg);
+  background-color: var(--gallop-bg); /* This ensures a consistent background color during page loads */
   color: var(--gallop-text);
   font-family: var(--gallop-sans-serif);
 }
