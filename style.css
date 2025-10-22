@@ -1,0 +1,204 @@
+/* --- Root Variables --- */
+:root {
+  --gallop-dark-wood: #5D4037;
+  --gallop-accent: #FFC107;
+  --gallop-bg: #FFFFFF;
+  --gallop-text: #4E342E;
+  --gallop-serif: 'Playfair Display', serif;
+  --gallop-sans-serif: 'Roboto', sans-serif;
+}
+
+/* --- Base Styles --- */
+body {
+  background-color: var(--gallop-bg);
+  color: var(--gallop-text);
+  font-family: var(--gallop-sans-serif);
+  margin: 0;
+  padding: 0;
+}
+
+h1, h2, h3, h4, h5 {
+  font-family: var(--gallop-serif);
+}
+
+/* --- Auth Container --- */
+.auth-container {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, var(--gallop-bg) 0%, #f8f9fa 100%);
+  padding: 2rem;
+}
+
+.auth-card {
+  background: white;
+  border-radius: 20px;
+  box-shadow: 0 20px 40px rgba(93, 64, 55, 0.1);
+  padding: 3rem;
+  width: 100%;
+  max-width: 450px;
+  border: 2px solid var(--gallop-accent);
+}
+
+.auth-header {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.auth-header h2 {
+  color: var(--gallop-dark-wood);
+  font-size: 2.5rem;
+  margin-bottom: 0.5rem;
+  font-weight: bold;
+}
+
+.auth-header p {
+  color: var(--gallop-text);
+  font-size: 1.1rem;
+}
+
+/* --- Form Styles --- */
+.form-group {
+  margin-bottom: 1.5rem;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 0.5rem;
+  color: var(--gallop-dark-wood);
+  font-weight: 600;
+  font-size: 1rem;
+}
+
+.form-control {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border: 2px solid #e0e0e0;
+  border-radius: 50px;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+  background-color: #fafafa;
+}
+
+.form-control:focus {
+  outline: none;
+  border-color: var(--gallop-accent);
+  background-color: white;
+  box-shadow: 0 0 0 3px rgba(255, 193, 7, 0.1);
+}
+
+.form-control::placeholder {
+  color: #999;
+}
+
+/* --- Button Styles --- */
+.btn-primary {
+  background-color: var(--gallop-dark-wood);
+  border-color: var(--gallop-dark-wood);
+  font-family: var(--gallop-sans-serif);
+  font-weight: bold;
+  border-radius: 50px;
+  transition: all 0.3s ease;
+  padding: 0.75rem 2rem;
+  font-size: 1rem;
+  width: 100%;
+  margin-top: 1rem;
+}
+
+.btn-primary:hover {
+  background-color: var(--gallop-text);
+  border-color: var(--gallop-text);
+  transform: translateY(-3px);
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+
+.btn-outline-dark {
+  border-color: var(--gallop-dark-wood);
+  color: var(--gallop-dark-wood);
+  background-color: transparent;
+  border-radius: 50px;
+  padding: 0.75rem 2rem;
+  font-weight: bold;
+  transition: all 0.3s ease;
+  text-decoration: none;
+  display: inline-block;
+  text-align: center;
+  width: 100%;
+  margin-top: 1rem;
+}
+
+.btn-outline-dark:hover {
+  background-color: var(--gallop-dark-wood);
+  color: white;
+  text-decoration: none;
+}
+
+/* --- Alert Messages --- */
+.alert {
+  padding: 1rem;
+  border-radius: 10px;
+  margin-bottom: 1rem;
+  font-weight: 500;
+}
+
+.alert-success {
+  background-color: #d4edda;
+  color: #155724;
+  border: 1px solid #c3e6cb;
+}
+
+.alert-danger {
+  background-color: #f8d7da;
+  color: #721c24;
+  border: 1px solid #f5c6cb;
+}
+
+/* --- Link Styles --- */
+.auth-links {
+  text-align: center;
+  margin-top: 2rem;
+}
+
+.auth-links a {
+  color: var(--gallop-dark-wood);
+  text-decoration: none;
+  font-weight: 600;
+  transition: color 0.3s ease;
+}
+
+.auth-links a:hover {
+  color: var(--gallop-text);
+  text-decoration: underline;
+}
+
+/* --- Responsive Design --- */
+@media (max-width: 768px) {
+  .auth-container {
+    padding: 1rem;
+  }
+  
+  .auth-card {
+    padding: 2rem;
+  }
+  
+  .auth-header h2 {
+    font-size: 2rem;
+  }
+}
+
+/* --- Loading Animation --- */
+.loading {
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  border: 3px solid #f3f3f3;
+  border-top: 3px solid var(--gallop-dark-wood);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
