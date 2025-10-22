@@ -1,3 +1,34 @@
+<?php
+    session_start();
+
+    if (!isset($_SESSION['user_id'])) {
+        header('Location: login.php');
+        exit();
+    }
+
+    $userId = $_SESSION['user_id'];
+    $username = $_SESSION['username'];
+    $email = $_SESSION['email'];
+    $fname = $_SESSION['fname'];
+    $lname = $_SESSION['lname'];
+    $fullName = $_SESSION['full_name'];
+    $role = $_SESSION['role'];
+
+    require_once 'db/db_connect.php';
+    $stmt = $conn->prepare("SELECT contactNum FROM user WHERE userId = ?");
+    $stmt->bind_param("i", $userId);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $userData = $result->fetch_assoc();
+    $contactNum = $userData['contactNum'] ?? 'N/A';
+    $stmt->close();
+
+    $profile_success = $_SESSION['profile_success'] ?? '';
+    $profile_error = $_SESSION['profile_error'] ?? '';
+    unset($_SESSION['profile_success'], $_SESSION['profile_error']);
+?>
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -245,229 +276,243 @@
 </head>
 <body>
 
-    <!-- Header Placeholder -->
+    <!-- Header Mockup -->
     <div id="header-placeholder">
-        <a href="#" class="header-logo"><i class="bi bi-box"></i> MockDash</a>
+        <a href="index.html" class="header-logo">
+            <!-- <img src="assets/Gallop-Project-Logo.svg" alt="Gallop Logo" style="height: 40px;"> -->
+            🐎 GALLOP
+        </a>
+        <nav class="header-nav">
+            <a href="index.html">Home</a>
+            <a href="our-spaces.html">Our Spaces</a>
+            <a href="about.html">About</a>
+        </nav>
         <div class="header-user">
-             <span>Welcome, [Username]</span>
+            <span>Welcome, <?php echo htmlspecialchars($fname); ?>!</span>
+            <a href="logout.php" class="btn btn-sm btn-outline-primary">Logout</a>
         </div>
     </div>
 
     <div class="dashboard-page-sidebar">
-        <!-- Sidebar Navigation -->
-        <nav class="dashboard-sidebar">
-             <div class="user-info-sidebar text-center">
-                <img src="https://placehold.co/80x80/5D4037/FFFFFF?text=User" alt="User Avatar" class="rounded-circle mb-2">
-                <h5>[Username]</h5>
-                <p>[user@email.com]</p>
-             </div>
-            <ul class="nav flex-column sidebar-nav">
-                <li class="nav-item">
-                    <a class="nav-link active" data-section="overview">
-                        <i class="bi bi-speedometer2"></i> Overview
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" data-section="book"> <!-- Changed to navigate internally -->
-                        <i class="bi bi-calendar-plus"></i> Book a Space
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" data-section="bookings">
-                        <i class="bi bi-calendar-check"></i> My Bookings
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" data-section="profile">
-                        <i class="bi bi-person-fill"></i> My Profile
-                    </a>
-                </li>
-                <li class="nav-item mt-auto pt-3 border-top">
-                     <a class="nav-link" href="#"> <!-- Actual logout link -->
-                        <i class="bi bi-box-arrow-left"></i> Logout
-                    </a>
-                </li>
-            </ul>
-        </nav>
 
-        <!-- Main Content Area -->
+        <!-- Sidebar -->
+        <aside class="dashboard-sidebar">
+            <div class="user-info-sidebar text-center">
+                <div class="mb-2">
+                    <i class="bi bi-person-circle" style="font-size: 3rem; color: var(--gallop-dark-wood);"></i>
+                </div>
+                <h5 class="mb-1"><?php echo htmlspecialchars($fname); ?></h5>
+                <p class="mb-0"><?php echo htmlspecialchars($email); ?></p>
+                <p class="mb-0 text-muted-custom small"><?php echo ucfirst(htmlspecialchars($role)); ?></p>
+            </div>
+
+            <nav class="sidebar-nav">
+                <ul class="nav flex-column">
+                    <li class="nav-item">
+                        <a class="nav-link active" data-section="overview">
+                            <i class="bi bi-speedometer2"></i> Overview
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" data-section="book">
+                            <i class="bi bi-calendar-plus"></i> Book a Space
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" data-section="bookings">
+                            <i class="bi bi-calendar-check"></i> My Bookings
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" data-section="history">
+                            <i class="bi bi-clock-history"></i> Booking History
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" data-section="profile">
+                            <i class="bi bi-person"></i> My Profile
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
         <main class="dashboard-content">
 
-            <!-- == Overview Section == -->
+            <!-- Welcome Section -->
+            <div class="welcome-section">
+                <h2>Welcome back, <?php echo htmlspecialchars($fname); ?>! 🐎</h2>
+                <p>Ready to book your next productive workspace? Let's get started!</p>
+            </div>
+
+            <!-- Overview Section -->
             <section id="overview" class="content-section active">
-                <div class="dashboard-header mb-4">
-                    <h1 class="display-5 fw-bold">Welcome back, [Username]!</h1>
-                    <p class="lead text-muted">Here's a quick look at your activity.</p>
+                <h3 class="mb-4">Dashboard Overview</h3>
+
+                <div class="row g-4 mb-4">
+                    <div class="col-md-4">
+                        <div class="dashboard-card">
+                            <div class="card-body text-center">
+                                <i class="bi bi-calendar-check text-primary" style="font-size: 2.5rem;"></i>
+                                <h5 class="card-title mt-3">Upcoming Bookings</h5>
+                                <p class="h2 mb-0">2</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="dashboard-card">
+                            <div class="card-body text-center">
+                                <i class="bi bi-clock-history text-success" style="font-size: 2.5rem;"></i>
+                                <h5 class="card-title mt-3">Past Bookings</h5>
+                                <p class="h2 mb-0">5</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="dashboard-card">
+                            <div class="card-body text-center">
+                                <i class="bi bi-star-fill text-warning" style="font-size: 2.5rem;"></i>
+                                <h5 class="card-title mt-3">Favorite Space</h5>
+                                <p class="h5 mb-0">Solo Space A</p>
+                            </div>
+                        </div>
+                    </div>
                 </div>
+
                 <div class="row">
-                    <div class="col-lg-7">
-                        <div class="card dashboard-card">
+                    <div class="col-lg-8">
+                        <div class="dashboard-card">
                             <div class="card-body">
-                                <h5 class="card-title"><i class="bi bi-calendar-event me-2"></i>Next Upcoming Booking</h5>
-                                <!-- Placeholder for next booking details -->
-                                <div class="booking-item">
-                                    <div class="booking-item-icon"><i class="bi bi-person-workspace"></i></div>
-                                    <div class="booking-item-details">
-                                        <p class="fw-bold mb-0">Solo Space</p>
-                                        <p class="text-muted small mb-0">October 23, 2025 | 9:00 AM - 11:00 AM</p>
+                                <h5 class="card-title">Upcoming Bookings</h5>
+                                <div class="booking-list">
+                                    <div class="list-group-item d-flex justify-content-between align-items-center">
+                                        <div>
+                                            <h6 class="mb-1">Solo Space A</h6>
+                                            <p class="mb-1 text-muted-custom"><i class="bi bi-calendar-event me-1"></i> Oct 25, 2025 | <i class="bi bi-clock me-1"></i> 10:00 AM - 12:00 PM</p>
+                                            <span class="badge bg-success">Confirmed</span>
+                                        </div>
+                                        <div>
+                                            <button class="btn btn-sm btn-outline-primary">View</button>
+                                        </div>
                                     </div>
-                                    <div class="booking-item-actions ms-auto d-flex flex-column flex-sm-row gap-1">
-                                        <button class="btn btn-sm btn-outline-secondary" onclick="navigateToSection('bookings')">Details</button>
-                                        <button class="btn btn-sm btn-outline-danger">Cancel</button>
+                                    <div class="list-group-item d-flex justify-content-between align-items-center">
+                                        <div>
+                                            <h6 class="mb-1">Table Space 1</h6>
+                                            <p class="mb-1 text-muted-custom"><i class="bi bi-calendar-event me-1"></i> Oct 28, 2025 | <i class="bi bi-clock me-1"></i> 2:00 PM - 4:00 PM</p>
+                                            <span class="badge bg-warning text-dark">Pending</span>
+                                        </div>
+                                        <div>
+                                            <button class="btn btn-sm btn-outline-primary">View</button>
+                                        </div>
                                     </div>
-                                </div>
-                                <!-- Message if no upcoming bookings -->
-                                <div class="text-center pt-3 d-none">
-                                    <p class="text-muted mt-2 mb-3">You have no upcoming bookings.</p>
-                                    <button class="btn btn-primary" onclick="navigateToSection('book')">Book a Space</button>
                                 </div>
                             </div>
                         </div>
                     </div>
-                     <div class="col-lg-5">
-                         <div class="card dashboard-card">
+                    <div class="col-lg-4">
+                        <div class="dashboard-card">
                             <div class="card-body">
-                                <h5 class="card-title"><i class="bi bi-bar-chart-line me-2"></i>Quick Stats</h5>
-                                <p class="small text-muted mb-1">Total Bookings:</p>
-                                <h3 class="fw-bold">15</h3>
-                                <p class="small text-muted mb-1 mt-3">Hours Booked (This Month):</p>
-                                <h3 class="fw-bold">28</h3>
-                                <button class="btn btn-sm btn-outline-dark mt-3 w-100" onclick="navigateToSection('bookings')">View Booking History</button>
+                                <h5 class="card-title">Quick Actions</h5>
+                                <div class="d-grid gap-2">
+                                    <button class="btn btn-primary" onclick="navigateToSection('book')">
+                                        <i class="bi bi-calendar-plus me-2"></i> Book Now
+                                    </button>
+                                    <button class="btn btn-outline-primary" onclick="navigateToSection('bookings')">
+                                        <i class="bi bi-calendar-check me-2"></i> View Bookings
+                                    </button>
+                                    <button class="btn btn-outline-primary" onclick="navigateToSection('profile')">
+                                        <i class="bi bi-person me-2"></i> Edit Profile
+                                    </button>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </section>
 
-             <!-- == Book a Space Section == -->
+            <!-- Book a Space Section -->
             <section id="book" class="content-section">
-                <h1 class="mb-4">Book a Space</h1>
-                <div class="card dashboard-card">
+                <h3 class="mb-4">Book a Workspace</h3>
+                <div class="dashboard-card">
                     <div class="card-body">
-                        <h5 class="card-title"><i class="bi bi-search me-2"></i>Find Available Spaces</h5>
-                        <form>
-                            <div class="row g-3 align-items-end">
-                                <div class="col-md-4">
+                        <h5 class="card-title">New Booking</h5>
+                        <form id="booking-form">
+                            <div class="row g-3 mb-3">
+                                <div class="col-md-6">
+                                    <label for="book-facility" class="form-label">Select Facility</label>
+                                    <select class="form-select" id="book-facility" required>
+                                        <option value="" selected disabled>Choose a workspace...</option>
+                                        <option value="solo">Solo Space</option>
+                                        <option value="table">Table Space</option>
+                                        <option value="board">Board Room</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-6">
                                     <label for="book-date" class="form-label">Date</label>
-                                    <input type="date" class="form-control" id="book-date" value="">
+                                    <input type="date" class="form-control" id="book-date" required>
                                 </div>
-                                <div class="col-md-3">
+                                <div class="col-md-6">
                                     <label for="book-start-time" class="form-label">Start Time</label>
-                                    <input type="time" class="form-control" id="book-start-time" step="1800" value="09:00"> <!-- 30 min steps -->
+                                    <input type="time" class="form-control" id="book-start-time" required>
                                 </div>
-                                 <div class="col-md-3">
+                                <div class="col-md-6">
                                     <label for="book-end-time" class="form-label">End Time</label>
-                                    <input type="time" class="form-control" id="book-end-time" step="1800" value="11:00">
+                                    <input type="time" class="form-control" id="book-end-time" required>
                                 </div>
-                                <div class="col-md-2">
-                                    <button type="button" class="btn btn-primary w-100">Search</button>
+                                <div class="col-md-12">
+                                    <label for="book-pax" class="form-label">Number of People</label>
+                                    <input type="number" class="form-control" id="book-pax" min="1" value="1" required>
                                 </div>
                             </div>
+                            <button type="submit" class="btn btn-primary">Submit Booking</button>
                         </form>
-
-                        <hr class="my-4">
-                        <h6 class="text-muted mb-3">Available Spaces for [Date] from [Start Time] to [End Time]:</h6>
-                        <!-- Placeholder for search results -->
-                        <div class="list-group">
-                            <a href="#" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
-                                <div>
-                                    <h6 class="mb-1 fw-bold">Solo Space 1</h6>
-                                    <small class="text-muted">Capacity: 1 | Features: Monitor, Coffee</small>
-                                </div>
-                                <span class="badge bg-success rounded-pill">Available</span>
-                            </a>
-                             <a href="#" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
-                                <div>
-                                    <h6 class="mb-1 fw-bold">Table Space A</h6>
-                                    <small class="text-muted">Capacity: 4 | Features: TV, Whiteboard</small>
-                                </div>
-                                <span class="badge bg-success rounded-pill">Available</span>
-                            </a>
-                            <div class="list-group-item text-center text-muted d-none"> <!-- Show if no results -->
-                                No spaces available for the selected time.
-                            </div>
-                        </div>
                     </div>
                 </div>
             </section>
 
-            <!-- == My Bookings Section == -->
+            <!-- My Bookings Section -->
             <section id="bookings" class="content-section">
-                <h1 class="mb-4">My Bookings</h1>
-                <div class="card dashboard-card">
+                <h3 class="mb-4">My Active Bookings</h3>
+                <div class="dashboard-card">
                     <div class="card-body">
-                        <h5 class="card-title"><i class="bi bi-calendar-check me-2"></i>Upcoming Bookings</h5>
-                        <div class="booking-list mb-4">
-                            <!-- Example Upcoming Booking 1 -->
-                            <div class="booking-item">
-                                <div class="booking-item-icon"><i class="bi bi-person-workspace"></i></div>
-                                <div class="booking-item-details">
-                                    <p class="fw-bold mb-0">Solo Space</p>
-                                    <p class="text-muted small mb-0">October 23, 2025 | 9:00 AM - 11:00 AM</p>
-                                </div>
-                                <div class="booking-item-actions ms-auto d-flex flex-column flex-sm-row gap-1">
-                                    <button class="btn btn-sm btn-outline-secondary">Details</button>
-                                    <button class="btn btn-sm btn-outline-danger">Cancel</button>
-                                </div>
-                            </div>
-                            <!-- Example Upcoming Booking 2 -->
-                            <div class="booking-item">
-                                <div class="booking-item-icon"><i class="bi bi-tv-fill"></i></div>
-                                <div class="booking-item-details">
-                                    <p class="fw-bold mb-0">Table Space</p>
-                                    <p class="text-muted small mb-0">October 25, 2025 | 1:00 PM - 4:00 PM</p>
-                                </div>
-                                <div class="booking-item-actions ms-auto d-flex flex-column flex-sm-row gap-1">
-                                     <button class="btn btn-sm btn-outline-secondary">Details</button>
-                                     <button class="btn btn-sm btn-outline-danger">Cancel</button>
-                                </div>
-                            </div>
-                             <!-- Placeholder: Message if no bookings -->
-                             <div class="text-center pt-3 d-none"> <!-- Use d-none to hide initially -->
-                                <p class="text-muted mt-4">You have no upcoming bookings.</p>
-                                <button class="btn btn-primary btn-sm mt-2" onclick="navigateToSection('book')">Book a Space</button>
-                            </div>
-                        </div>
-                         <hr>
-                         <h5 class="card-title mt-4"><i class="bi bi-clock-history me-2"></i>Booking History</h5>
-                         <div class="table-responsive">
-                            <table class="table table-striped table-hover small align-middle">
+                        <div class="table-responsive">
+                            <table class="table table-hover">
                                 <thead>
                                     <tr>
-                                        <th>Space</th>
+                                        <th>Booking ID</th>
+                                        <th>Facility</th>
                                         <th>Date</th>
                                         <th>Time</th>
+                                        <th>Pax</th>
                                         <th>Status</th>
-                                        <th>Action</th>
+                                        <th>Actions</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <!-- Example Past Booking 1 -->
                                     <tr>
-                                        <td>Board Room</td>
-                                        <td>Oct 15, 2025</td>
+                                        <td>#1001</td>
+                                        <td>Solo Space A</td>
+                                        <td>Oct 25, 2025</td>
                                         <td>10:00 AM - 12:00 PM</td>
-                                        <td><span class="badge bg-success">Completed</span></td>
-                                        <td><a href="#" class="btn btn-sm btn-link text-decoration-none p-0">View</a></td>
-                                    </tr>
-                                     <!-- Example Past Booking 2 -->
-                                    <tr>
-                                        <td>Solo Space</td>
-                                        <td>Oct 10, 2025</td>
-                                        <td>2:00 PM - 3:00 PM</td>
-                                        <td><span class="badge bg-secondary text-dark-emphasis">Cancelled</span></td>
-                                         <td><a href="#" class="btn btn-sm btn-link text-decoration-none p-0">View</a></td>
+                                        <td>1</td>
+                                        <td><span class="badge bg-success">Confirmed</span></td>
+                                        <td>
+                                            <button class="btn btn-sm btn-outline-primary">View</button>
+                                            <button class="btn btn-sm btn-outline-danger">Cancel</button>
+                                        </td>
                                     </tr>
                                     <tr>
-                                        <td>Table Space</td>
-                                        <td>Sep 28, 2025</td>
-                                        <td>1:00 PM - 2:00 PM</td>
-                                        <td><span class="badge bg-success">Completed</span></td>
-                                         <td><a href="#" class="btn btn-sm btn-link text-decoration-none p-0">View</a></td>
-                                    </tr>
-                                     <!-- Placeholder: Message if no history -->
-                                    <tr class="d-none">
-                                        <td colspan="5" class="text-center text-muted py-3">No past bookings found.</td>
+                                        <td>#1002</td>
+                                        <td>Table Space 1</td>
+                                        <td>Oct 28, 2025</td>
+                                        <td>2:00 PM - 4:00 PM</td>
+                                        <td>4</td>
+                                        <td><span class="badge bg-warning text-dark">Pending</span></td>
+                                        <td>
+                                            <button class="btn btn-sm btn-outline-primary">View</button>
+                                            <button class="btn btn-sm btn-outline-danger">Cancel</button>
+                                        </td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -476,64 +521,111 @@
                 </div>
             </section>
 
-            <!-- == My Profile Section == -->
-            <section id="profile" class="content-section">
-                 <h1 class="mb-4">My Profile</h1>
-                <div class="card dashboard-card">
+            <!-- Booking History Section -->
+            <section id="history" class="content-section">
+                <h3 class="mb-4">Booking History</h3>
+                <div class="dashboard-card">
                     <div class="card-body">
-                         <div class="d-flex justify-content-between align-items-center mb-3">
-                             <h5 class="card-title mb-0"><i class="bi bi-person-badge me-2"></i>Account Details</h5>
-                             <button id="edit-profile-button" class="btn btn-outline-dark btn-sm" onclick="toggleEditProfile(true)">
-                                <i class="bi bi-pencil-square me-1"></i> Edit Profile
-                             </button>
-                         </div>
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>Booking ID</th>
+                                        <th>Facility</th>
+                                        <th>Date</th>
+                                        <th>Time</th>
+                                        <th>Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>#998</td>
+                                        <td>Board Room Executive</td>
+                                        <td>Oct 10, 2025</td>
+                                        <td>9:00 AM - 11:00 AM</td>
+                                        <td><span class="badge bg-secondary">Completed</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>#997</td>
+                                        <td>Solo Space A</td>
+                                        <td>Oct 5, 2025</td>
+                                        <td>1:00 PM - 3:00 PM</td>
+                                        <td><span class="badge bg-secondary">Completed</span></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </section>
 
-                         <!-- Profile Display View -->
-                         <div id="profile-display" class="profile-details">
-                            <p><strong>First Name:</strong> <span data-field="fname">[John]</span></p>
-                            <p><strong>Last Name:</strong> <span data-field="lname">[Doe]</span></p>
-                            <p><strong>Username:</strong> <span data-field="username">[Username]</span></p>
-                            <p><strong>Email:</strong> <span data-field="email">[user@email.com]</span></p>
-                            <p><strong>Contact:</strong> <span data-field="contact">[09123456789]</span></p>
+            <!-- Profile Section -->
+            <section id="profile" class="content-section">
+                <h3 class="mb-4">My Profile</h3>
+                <div class="dashboard-card">
+                    <div class="card-body">
+                        <h5 class="card-title">Account Information
+                            <button type="button" class="btn btn-sm btn-primary float-end" id="edit-profile-button" onclick="toggleEditProfile(true)">
+                                <i class="bi bi-pencil-square"></i> Edit Profile
+                            </button>
+                        </h5>
+
+                         <div id="profile-display">
+                            <p><strong>First Name:</strong> <span data-field="fname"><?php echo htmlspecialchars($fname); ?></span></p>
+                            <p><strong>Last Name:</strong> <span data-field="lname"><?php echo htmlspecialchars($lname); ?></span></p>
+                            <p><strong>Username:</strong> <span data-field="username"><?php echo htmlspecialchars($username); ?></span></p>
+                            <p><strong>Email:</strong> <span data-field="email"><?php echo htmlspecialchars($email); ?></span></p>
+                            <p><strong>Contact:</strong> <span data-field="contact"><?php echo htmlspecialchars($contactNum); ?></span></p>
                             <p><strong>Password:</strong> ******** <button type="button" class="btn btn-sm btn-link p-0 ms-2">(Change)</button></p>
                          </div>
 
-                         <!-- Profile Edit Form (Hidden by default) -->
-                         <form id="profile-edit-form" class="d-none mt-3">
-                            <div class="alert alert-success d-none" role="alert" id="profile-success-message">
-                                Profile updated successfully!
+                        <form id="profile-edit-form" class="d-none mt-3" action="functions/update_profile.php" method="POST">
+                            <?php if ($profile_success): ?>
+                            <div class="alert alert-success" role="alert">
+                                <?php echo htmlspecialchars($profile_success); ?>
                             </div>
-                            <div class="alert alert-danger d-none" role="alert" id="profile-error-message">
-                                Error updating profile. Please try again.
+                            <script>
+                                document.addEventListener('DOMContentLoaded', function() { toggleEditProfile(true); setTimeout(() => { toggleEditProfile(false); }, 2000);});
+                            </script>
+                            <?php endif; ?>
+                            
+                            <?php if ($profile_error): ?>
+                            <div class="alert alert-danger" role="alert">
+                                <?php echo htmlspecialchars($profile_error); ?>
                             </div>
+                            <script> 
+                                document.addEventListener('DOMContentLoaded', function() { toggleEditProfile(true);});
+                            </script>
+                            <?php endif; ?>
+                            
                             <div class="row g-3 mb-3">
                                 <div class="col-md-6">
                                     <label for="profile-fname" class="form-label">First Name</label>
-                                    <input type="text" class="form-control" id="profile-fname" value="[John]">
+                                    <input type="text" class="form-control" id="profile-fname" name="fname" value="<?php echo htmlspecialchars($fname); ?>">
                                 </div>
                                 <div class="col-md-6">
                                     <label for="profile-lname" class="form-label">Last Name</label>
-                                    <input type="text" class="form-control" id="profile-lname" value="[Doe]">
+                                    <input type="text" class="form-control" id="profile-lname" name="lname" value="<?php echo htmlspecialchars($lname); ?>">
                                 </div>
                                 <div class="col-md-6">
                                      <label for="profile-username" class="form-label">Username</label>
-                                    <input type="text" class="form-control" id="profile-username" value="[Username]" readonly disabled>
+                                    <input type="text" class="form-control" id="profile-username" value="<?php echo htmlspecialchars($username); ?>" readonly disabled>
                                     <small class="text-muted">Username cannot be changed.</small>
                                 </div>
                                  <div class="col-md-6">
                                     <label for="profile-email" class="form-label">Email</label>
-                                    <input type="email" class="form-control" id="profile-email" value="[user@email.com]">
+                                    <input type="email" class="form-control" id="profile-email" name="email" value="<?php echo htmlspecialchars($email); ?>">
                                 </div>
                                 <div class="col-md-6">
                                     <label for="profile-contact" class="form-label">Contact Number</label>
-                                    <input type="tel" class="form-control" id="profile-contact" value="[09123456789]">
+                                    <input type="tel" class="form-control" id="profile-contact" name="contact" value="<?php echo htmlspecialchars($contactNum); ?>">
                                 </div>
                             </div>
                             <div class="d-flex gap-2 mt-3">
                                 <button type="submit" class="btn btn-primary">Save Changes</button>
                                 <button type="button" class="btn btn-secondary" onclick="toggleEditProfile(false)">Cancel</button>
                             </div>
-                         </form>
+                        </form>
                     </div>
                 </div>
             </section>
@@ -601,13 +693,6 @@
             profileSuccessMessage.classList.add('d-none'); // Hide messages on toggle
             profileErrorMessage.classList.add('d-none');
             if (editing) {
-                // Populate form with current display values before showing
-                document.getElementById('profile-fname').value = profileDisplay.querySelector('[data-field="fname"]').textContent;
-                document.getElementById('profile-lname').value = profileDisplay.querySelector('[data-field="lname"]').textContent;
-                document.getElementById('profile-email').value = profileDisplay.querySelector('[data-field="email"]').textContent;
-                document.getElementById('profile-contact').value = profileDisplay.querySelector('[data-field="contact"]').textContent;
-                // Username is readonly, no need to update input from display
-
                 profileDisplay.classList.add('d-none');
                 profileEditForm.classList.remove('d-none');
                 editProfileButton.classList.add('d-none'); // Hide Edit button
@@ -617,33 +702,6 @@
                  editProfileButton.classList.remove('d-none'); // Show Edit button
             }
         }
-
-        // Mock saving profile data
-        profileEditForm.addEventListener('submit', (event) => {
-             event.preventDefault(); // Prevent actual form submission
-             profileSuccessMessage.classList.add('d-none');
-             profileErrorMessage.classList.add('d-none');
-
-            // Simulate API call delay
-            setTimeout(() => {
-                // Mock success/failure randomly (replace with actual logic)
-                const isSuccess = Math.random() > 0.2; // 80% chance of success
-
-                if(isSuccess) {
-                    // Update display elements with form values
-                    profileDisplay.querySelector('[data-field="fname"]').textContent = document.getElementById('profile-fname').value;
-                    profileDisplay.querySelector('[data-field="lname"]').textContent = document.getElementById('profile-lname').value;
-                    profileDisplay.querySelector('[data-field="email"]').textContent = document.getElementById('profile-email').value;
-                    profileDisplay.querySelector('[data-field="contact"]').textContent = document.getElementById('profile-contact').value;
-
-                    profileSuccessMessage.classList.remove('d-none');
-                    // Switch back to display view after a short delay
-                    setTimeout(() => toggleEditProfile(false), 1500);
-                } else {
-                    profileErrorMessage.classList.remove('d-none');
-                }
-            }, 500); // 0.5 second delay
-        });
 
         // Initialize view
         document.addEventListener('DOMContentLoaded', () => {
@@ -655,3 +713,4 @@
     </script>
 </body>
 </html>
+

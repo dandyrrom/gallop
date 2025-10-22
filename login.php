@@ -1,11 +1,19 @@
 <?php
+session_start();
 require_once 'db/db_connect.php';
 
+header("Cache-Control: no-store, no-cache, must-revalidate, max-age=0");
+header("Pragma: no-cache");
+
+if (isset($_SESSION['user_id'])) {
+    header('Location: dashboard.php');
+    exit();
+}
 
 $error_message = '';
 $success_message = '';
 
-// Handle login form submission
+
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $username = trim($_POST['username'] ?? '');
     $password = $_POST['password'] ?? '';
@@ -13,12 +21,32 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     if (empty($username) || empty($password)) {
         $error_message = 'Please fill in all fields.';
     } else {
-        // Simple validation - just check if fields are filled
-        if (strlen($password) >= 6) {
-            $success_message = 'Login successful! Welcome back.';
+        $stmt = $conn->prepare("SELECT userId, userName, email, password, role, fname, lname FROM user WHERE userName = ?");
+        $stmt->bind_param("s", $username);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        
+        if ($result->num_rows === 1) {
+            $user = $result->fetch_assoc();
+            if ($password === $user['password']) {
+                $_SESSION['user_id'] = $user['userId'];
+                $_SESSION['username'] = $user['userName'];
+                $_SESSION['email'] = $user['email'];
+                $_SESSION['role'] = $user['role'];
+                $_SESSION['fname'] = $user['fname'];
+                $_SESSION['lname'] = $user['lname'];
+                $_SESSION['full_name'] = $user['fname'] . ' ' . $user['lname'];
+                
+                header('Location: dashboard.php');
+                exit();
+            } else {
+                $error_message = 'Invalid username or password.';
+            }
         } else {
-            $error_message = 'Password must be at least 6 characters long.';
+            $error_message = 'Invalid username or password.';
         }
+        
+        $stmt->close();
     }
 }
 ?>
