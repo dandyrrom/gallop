@@ -35,7 +35,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         if ($check_result->num_rows > 0) {
             $error_message = 'Username or email already exists. Please choose another.';
         } else {
-            // $hashed_password = password_hash($password, PASSWORD_DEFAULT); if needed
+            $hashed_password = password_hash($password, PASSWORD_DEFAULT); //if needed
             $role = 'user';
             $stmt = $conn->prepare("INSERT INTO user (userName, email, password, role, fname, lname, contactNum) VALUES (?, ?, ?, ?, ?, ?, ?)");
             $stmt->bind_param("sssssss", $username, $email, $hashed_password, $role, $first_name, $last_name, $contact_number);
@@ -61,11 +61,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sign Up - Gallop</title>
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="css/header.css">
 </head>
 <body>
+    <?php include '_includes/header.html'; ?>
     <div class="auth-container">
         <div class="auth-card">
             <div class="auth-header">
@@ -176,8 +178,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             </div>
         </div>
     </div>
-    
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <?php include '_includes/footer.html'; ?>
+    <script src="js/bootstrap.bundle.min.js"></script>
     <script>
         // Password confirmation validation
         document.getElementById('confirm_password').addEventListener('input', function() {

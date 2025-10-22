@@ -20,6 +20,16 @@ h1, h2, h3, h4, h5 {
   font-family: var(--gallop-serif);
 }
 
+.auth-container {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, var(--gallop-bg) 0%, #f8f9fa 100%);
+  padding: 2rem;
+  padding-top: 100px; /* Adjust this value based on your header's height */
+}
+
 /* --- Header Centering Fix --- */
 @media (min-width: 992px) {
   .navbar-nav-centered {
