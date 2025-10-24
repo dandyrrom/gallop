@@ -17,6 +17,10 @@ $email = htmlspecialchars($_SESSION['email'] ?? '');
 $contactNum = htmlspecialchars($_SESSION['contactNum'] ?? '');
 $role = htmlspecialchars($_SESSION['role'] ?? 'user');
 
+// Note: VK fetches contactNum separately; VD already has it. We use the VD version.
+// Note: VK defines $fullName; VD does not, but VK sidebar doesn't seem to use it.
+// Note: VK includes profile update messages logic; VD does not yet have this. Let's keep it out for now.
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -40,10 +44,10 @@ $role = htmlspecialchars($_SESSION['role'] ?? 'user');
 
     <!-- Component Styles -->
     <link rel="stylesheet" href="css/header.css">
-    <link rel="stylesheet" href="css/footer.css">
+    <link rel="stylesheet" href="css/footer.css"> <!-- Keep link in case other parts need it, though footer removed below -->
 
     <!-- Page-Specific Styles -->
-    <link rel="stylesheet" href="css/dashboard.css">
+    <link rel="stylesheet" href="css/dashboard.css"> <!-- Assuming dashboard.css matches the visual style needed -->
 
     <!-- Favicon -->
     <link rel="icon" href="assets/horse-head-faviconv.png" type="image/png">
@@ -51,48 +55,60 @@ $role = htmlspecialchars($_SESSION['role'] ?? 'user');
 </head>
 <body>
 
-    <!-- Include the specific dashboard header -->
+    <!-- Include the specific dashboard header (Kept from VD) -->
     <?php include '_includes/header_dashboard.php'; ?>
 
     <div class="dashboard-page-sidebar">
-        <!-- Sidebar Navigation -->
-        <nav class="dashboard-sidebar">
-             <div class="user-info-sidebar text-center">
-                <!-- Placeholder Avatar - replace if you add avatars later -->
-                <img src="https://placehold.co/80x80/5D4037/FFFFFF?text=<?php echo strtoupper(substr($fname, 0, 1)); ?>" alt="User Avatar" class="rounded-circle mb-2">
-                <h5><?php echo $username; ?></h5>
-                <p><?php echo $email; ?></p>
-             </div>
-            <ul class="nav flex-column sidebar-nav">
-                <li class="nav-item">
-                    <a class="nav-link active" data-section="overview">
-                        <i class="bi bi-speedometer2"></i> Overview
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" data-section="book">
-                        <i class="bi bi-calendar-plus"></i> Book a Space
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" data-section="bookings">
-                        <i class="bi bi-calendar-check"></i> My Bookings
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" data-section="profile">
-                        <i class="bi bi-person-fill"></i> My Profile
-                    </a>
-                </li>
-                <li class="nav-item mt-auto pt-3 border-top">
-                     <a class="nav-link" href="logout.php"> <!-- Link updated -->
-                        <i class="bi bi-box-arrow-left"></i> Logout
-                    </a>
-                </li>
-            </ul>
-        </nav>
+        <!-- Sidebar Navigation (Copied structure from VK) -->
+        <aside class="dashboard-sidebar">
+            <div class="user-info-sidebar text-center">
+                <div class="mb-2">
+                    <!-- Placeholder Icon/Image -->
+                     <img src="https://placehold.co/80x80/5D4037/FFFFFF?text=<?php echo strtoupper(substr($fname, 0, 1)); ?>" alt="User Avatar" class="rounded-circle">
+                </div>
+                <h5 class="mb-1"><?php echo $fname; ?></h5>
+                <p class="mb-0"><?php echo $email; ?></p>
+                <p class="mb-0 text-muted small"><?php echo ucfirst($role); ?></p>
+            </div>
 
-        <!-- Main Content Area -->
+            <nav class="sidebar-nav">
+                <ul class="nav flex-column">
+                    <li class="nav-item">
+                        <a class="nav-link active" data-section="overview">
+                            <i class="bi bi-speedometer2"></i> Overview
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" data-section="book">
+                            <i class="bi bi-calendar-plus"></i> Book a Space
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" data-section="bookings">
+                            <i class="bi bi-calendar-check"></i> My Bookings
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" data-section="history"> <!-- Added History from VK -->
+                            <i class="bi bi-clock-history"></i> Booking History
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" data-section="profile">
+                            <i class="bi bi-person"></i> My Profile
+                        </a>
+                    </li>
+                    <!-- Logout button included in sidebar -->
+                    <li class="nav-item mt-auto pt-3 border-top">
+                         <a class="nav-link" href="logout.php">
+                            <i class="bi bi-box-arrow-left"></i> Logout
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </aside>
+
+        <!-- Main Content Area (Keep VD's content sections for now) -->
         <main class="dashboard-content">
 
             <!-- == Overview Section == -->
@@ -106,7 +122,7 @@ $role = htmlspecialchars($_SESSION['role'] ?? 'user');
                         <div class="card dashboard-card">
                             <div class="card-body">
                                 <h5 class="card-title"><i class="bi bi-calendar-event me-2"></i>Next Upcoming Booking</h5>
-                                <!-- Placeholder for next booking details - Requires DB query -->
+                                <!-- Placeholder -->
                                 <div class="booking-item">
                                     <div class="booking-item-icon"><i class="bi bi-person-workspace"></i></div>
                                     <div class="booking-item-details">
@@ -118,7 +134,6 @@ $role = htmlspecialchars($_SESSION['role'] ?? 'user');
                                         <button class="btn btn-sm btn-outline-danger">Cancel</button>
                                     </div>
                                 </div>
-                                <!-- Message if no upcoming bookings -->
                                 <div class="text-center pt-3 d-none">
                                     <p class="text-muted mt-2 mb-3">You have no upcoming bookings.</p>
                                     <button class="btn btn-primary" onclick="navigateToSection('book')">Book a Space</button>
@@ -130,7 +145,7 @@ $role = htmlspecialchars($_SESSION['role'] ?? 'user');
                          <div class="card dashboard-card">
                             <div class="card-body">
                                 <h5 class="card-title"><i class="bi bi-bar-chart-line me-2"></i>Quick Stats</h5>
-                                <!-- Placeholders for stats - Requires DB query -->
+                                <!-- Placeholders -->
                                 <p class="small text-muted mb-1">Total Bookings:</p>
                                 <h3 class="fw-bold">15</h3>
                                 <p class="small text-muted mb-1 mt-3">Hours Booked (This Month):</p>
@@ -156,7 +171,7 @@ $role = htmlspecialchars($_SESSION['role'] ?? 'user');
                                 </div>
                                 <div class="col-md-3">
                                     <label for="book-start-time" class="form-label">Start Time</label>
-                                    <input type="time" class="form-control" id="book-start-time" step="1800" value="09:00"> <!-- 30 min steps -->
+                                    <input type="time" class="form-control" id="book-start-time" step="1800" value="09:00">
                                 </div>
                                  <div class="col-md-3">
                                     <label for="book-end-time" class="form-label">End Time</label>
@@ -167,28 +182,19 @@ $role = htmlspecialchars($_SESSION['role'] ?? 'user');
                                 </div>
                             </div>
                         </form>
-
                         <hr class="my-4">
                         <h6 class="text-muted mb-3">Available Spaces for [Date] from [Start Time] to [End Time]:</h6>
-                        <!-- Placeholder for search results - Requires dynamic PHP/JS -->
+                        <!-- Placeholder -->
                         <div class="list-group">
                             <a href="#" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
-                                <div>
-                                    <h6 class="mb-1 fw-bold">Solo Space 1</h6>
-                                    <small class="text-muted">Capacity: 1 | Features: Monitor, Coffee</small>
-                                </div>
+                                <div><h6 class="mb-1 fw-bold">Solo Space 1</h6><small class="text-muted">Capacity: 1 | Features: Monitor, Coffee</small></div>
                                 <span class="badge bg-success rounded-pill">Available</span>
                             </a>
                              <a href="#" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
-                                <div>
-                                    <h6 class="mb-1 fw-bold">Table Space A</h6>
-                                    <small class="text-muted">Capacity: 4 | Features: TV, Whiteboard</small>
-                                </div>
+                                <div><h6 class="mb-1 fw-bold">Table Space A</h6><small class="text-muted">Capacity: 4 | Features: TV, Whiteboard</small></div>
                                 <span class="badge bg-success rounded-pill">Available</span>
                             </a>
-                            <div class="list-group-item text-center text-muted d-none"> <!-- Show if no results -->
-                                No spaces available for the selected time.
-                            </div>
+                            <div class="list-group-item text-center text-muted d-none">No spaces available.</div>
                         </div>
                     </div>
                 </div>
@@ -200,56 +206,39 @@ $role = htmlspecialchars($_SESSION['role'] ?? 'user');
                 <div class="card dashboard-card">
                     <div class="card-body">
                         <h5 class="card-title"><i class="bi bi-calendar-check me-2"></i>Upcoming Bookings</h5>
-                        <!-- Placeholder for booking list - Requires DB query -->
+                        <!-- Placeholder -->
                         <div class="booking-list mb-4">
-                            <!-- Example Upcoming Booking 1 -->
                             <div class="booking-item">
                                 <div class="booking-item-icon"><i class="bi bi-person-workspace"></i></div>
-                                <div class="booking-item-details">
-                                    <p class="fw-bold mb-0">Solo Space</p>
-                                    <p class="text-muted small mb-0">October 23, 2025 | 9:00 AM - 11:00 AM</p>
-                                </div>
-                                <div class="booking-item-actions ms-auto d-flex flex-column flex-sm-row gap-1">
-                                    <button class="btn btn-sm btn-outline-secondary">Details</button>
-                                    <button class="btn btn-sm btn-outline-danger">Cancel</button>
-                                </div>
+                                <div class="booking-item-details"><p class="fw-bold mb-0">Solo Space</p><p class="text-muted small mb-0">October 23, 2025 | 9:00 AM - 11:00 AM</p></div>
+                                <div class="booking-item-actions ms-auto d-flex flex-column flex-sm-row gap-1"><button class="btn btn-sm btn-outline-secondary">Details</button><button class="btn btn-sm btn-outline-danger">Cancel</button></div>
                             </div>
-                             <!-- Placeholder: Message if no bookings -->
-                             <div class="text-center pt-3 d-none"> <!-- Use d-none to hide initially -->
-                                <p class="text-muted mt-4">You have no upcoming bookings.</p>
-                                <button class="btn btn-primary btn-sm mt-2" onclick="navigateToSection('book')">Book a Space</button>
-                            </div>
+                             <div class="text-center pt-3 d-none"><p class="text-muted mt-4">You have no upcoming bookings.</p><button class="btn btn-primary btn-sm mt-2" onclick="navigateToSection('book')">Book a Space</button></div>
                         </div>
                          <hr>
+                         <!-- NOTE: VD Merged history here, but VK has it separate. Keeping VD structure for now -->
                          <h5 class="card-title mt-4"><i class="bi bi-clock-history me-2"></i>Booking History</h5>
-                         <!-- Placeholder for booking history - Requires DB query -->
+                         <!-- Placeholder -->
                          <div class="table-responsive">
                             <table class="table table-striped table-hover small align-middle">
-                                <thead>
-                                    <tr>
-                                        <th>Space</th>
-                                        <th>Date</th>
-                                        <th>Time</th>
-                                        <th>Status</th>
-                                        <th>Action</th>
-                                    </tr>
-                                </thead>
+                                <thead><tr><th>Space</th><th>Date</th><th>Time</th><th>Status</th><th>Action</th></tr></thead>
                                 <tbody>
-                                    <!-- Example Past Booking 1 -->
-                                    <tr>
-                                        <td>Board Room</td>
-                                        <td>Oct 15, 2025</td>
-                                        <td>10:00 AM - 12:00 PM</td>
-                                        <td><span class="badge bg-success">Completed</span></td>
-                                        <td><a href="#" class="btn btn-sm btn-link text-decoration-none p-0">View</a></td>
-                                    </tr>
-                                     <!-- Placeholder: Message if no history -->
-                                    <tr class="d-none">
-                                        <td colspan="5" class="text-center text-muted py-3">No past bookings found.</td>
-                                    </tr>
+                                    <tr><td>Board Room</td><td>Oct 15, 2025</td><td>10:00 AM - 12:00 PM</td><td><span class="badge bg-success">Completed</span></td><td><a href="#" class="btn btn-sm btn-link text-decoration-none p-0">View</a></td></tr>
+                                    <tr class="d-none"><td colspan="5" class="text-center text-muted py-3">No past bookings found.</td></tr>
                                 </tbody>
                             </table>
                         </div>
+                    </div>
+                </div>
+            </section>
+
+             <!-- == Booking History Section (From VK, separate) == -->
+             <section id="history" class="content-section">
+                <h3 class="mb-4">Booking History</h3>
+                <div class="dashboard-card">
+                    <div class="card-body">
+                        <!-- Placeholder - Content from VK's history section would go here -->
+                        <p>Placeholder for Booking History Table (similar to the one in VD's 'My Bookings' section).</p>
                     </div>
                 </div>
             </section>
@@ -265,8 +254,6 @@ $role = htmlspecialchars($_SESSION['role'] ?? 'user');
                                 <i class="bi bi-pencil-square me-1"></i> Edit Profile
                              </button>
                          </div>
-
-                         <!-- Profile Display View -->
                          <div id="profile-display" class="profile-details">
                             <p><strong>First Name:</strong> <span data-field="fname"><?php echo $fname; ?></span></p>
                             <p><strong>Last Name:</strong> <span data-field="lname"><?php echo $lname; ?></span></p>
@@ -275,42 +262,18 @@ $role = htmlspecialchars($_SESSION['role'] ?? 'user');
                             <p><strong>Contact:</strong> <span data-field="contact"><?php echo $contactNum; ?></span></p>
                             <p><strong>Password:</strong> ******** <button type="button" class="btn btn-sm btn-link p-0 ms-2">(Change)</button></p>
                          </div>
-
-                         <!-- Profile Edit Form (Hidden by default) -->
                          <form id="profile-edit-form" class="d-none mt-3">
-                            <div class="alert alert-success d-none" role="alert" id="profile-success-message">
-                                Profile updated successfully!
-                            </div>
-                            <div class="alert alert-danger d-none" role="alert" id="profile-error-message">
-                                Error updating profile. Please try again.
-                            </div>
+                            <!-- Note: The action='functions/update_profile.php' from VK is removed for now, just using JS mock -->
+                            <div class="alert alert-success d-none" role="alert" id="profile-success-message">Profile updated successfully!</div>
+                            <div class="alert alert-danger d-none" role="alert" id="profile-error-message">Error updating profile. Please try again.</div>
                             <div class="row g-3 mb-3">
-                                <div class="col-md-6">
-                                    <label for="profile-fname" class="form-label">First Name</label>
-                                    <input type="text" class="form-control" id="profile-fname" value="<?php echo $fname; ?>">
-                                </div>
-                                <div class="col-md-6">
-                                    <label for="profile-lname" class="form-label">Last Name</label>
-                                    <input type="text" class="form-control" id="profile-lname" value="<?php echo $lname; ?>">
-                                </div>
-                                <div class="col-md-6">
-                                     <label for="profile-username" class="form-label">Username</label>
-                                    <input type="text" class="form-control" id="profile-username" value="<?php echo $username; ?>" readonly disabled>
-                                    <small class="text-muted">Username cannot be changed.</small>
-                                </div>
-                                 <div class="col-md-6">
-                                    <label for="profile-email" class="form-label">Email</label>
-                                    <input type="email" class="form-control" id="profile-email" value="<?php echo $email; ?>">
-                                </div>
-                                <div class="col-md-6">
-                                    <label for="profile-contact" class="form-label">Contact Number</label>
-                                    <input type="tel" class="form-control" id="profile-contact" value="<?php echo $contactNum; ?>">
-                                </div>
+                                <div class="col-md-6"><label for="profile-fname" class="form-label">First Name</label><input type="text" class="form-control" id="profile-fname" name="fname" value="<?php echo $fname; ?>"></div>
+                                <div class="col-md-6"><label for="profile-lname" class="form-label">Last Name</label><input type="text" class="form-control" id="profile-lname" name="lname" value="<?php echo $lname; ?>"></div>
+                                <div class="col-md-6"><label for="profile-username" class="form-label">Username</label><input type="text" class="form-control" id="profile-username" value="<?php echo $username; ?>" readonly disabled><small class="text-muted">Username cannot be changed.</small></div>
+                                <div class="col-md-6"><label for="profile-email" class="form-label">Email</label><input type="email" class="form-control" id="profile-email" name="email" value="<?php echo $email; ?>"></div>
+                                <div class="col-md-6"><label for="profile-contact" class="form-label">Contact Number</label><input type="tel" class="form-control" id="profile-contact" name="contact" value="<?php echo $contactNum; ?>"></div>
                             </div>
-                            <div class="d-flex gap-2 mt-3">
-                                <button type="submit" class="btn btn-primary">Save Changes</button>
-                                <button type="button" class="btn btn-secondary" onclick="toggleEditProfile(false)">Cancel</button>
-                            </div>
+                            <div class="d-flex gap-2 mt-3"><button type="submit" class="btn btn-primary">Save Changes</button><button type="button" class="btn btn-secondary" onclick="toggleEditProfile(false)">Cancel</button></div>
                          </form>
                     </div>
                 </div>
@@ -322,7 +285,7 @@ $role = htmlspecialchars($_SESSION['role'] ?? 'user');
     <!-- Bootstrap JS -->
      <script src="js/bootstrap.bundle.min.js"></script>
      <!-- Dashboard Specific JS -->
-     <script src="js/dashboard.js"></script>
+     <script src="js/dashboard.js"></script> <!-- Ensure dashboard.js is updated if needed -->
 </body>
 </html>
 
