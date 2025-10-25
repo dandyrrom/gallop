@@ -1,3 +1,9 @@
+
+<?php 
+session_start(); 
+include '_includes/header.php';
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>

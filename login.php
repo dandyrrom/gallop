@@ -1,6 +1,7 @@
 <?php
 session_start();
 require_once 'db/db_connect.php';
+<<<<<<< Updated upstream
 
 header("Cache-Control: no-store, no-cache, must-revalidate, max-age=0");
 header("Pragma: no-cache");
@@ -14,6 +15,18 @@ $error_message = '';
 $success_message = '';
 
 
+=======
+$error_message = '';
+$success_message = '';
+
+// Check if user is already logged in
+if (isset($_SESSION['user_id'])) {
+    header('Location: dashboard.php');
+    exit();
+}
+
+// Handle login form submission
+>>>>>>> Stashed changes
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $username = trim($_POST['username'] ?? '');
     $password = $_POST['password'] ?? '';
@@ -21,6 +34,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     if (empty($username) || empty($password)) {
         $error_message = 'Please fill in all fields.';
     } else {
+<<<<<<< Updated upstream
+=======
+        // Query database for user
+>>>>>>> Stashed changes
         $stmt = $conn->prepare("SELECT userId, userName, email, password, role, fname, lname FROM user WHERE userName = ?");
         $stmt->bind_param("s", $username);
         $stmt->execute();
@@ -28,7 +45,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         
         if ($result->num_rows === 1) {
             $user = $result->fetch_assoc();
+<<<<<<< Updated upstream
             if ($password === $user['password']) {
+=======
+            
+            // Check password (plain text comparison since not hashed)
+            if ($password === $user['password']) {
+                // Login successful - create session
+>>>>>>> Stashed changes
                 $_SESSION['user_id'] = $user['userId'];
                 $_SESSION['username'] = $user['userName'];
                 $_SESSION['email'] = $user['email'];
@@ -37,6 +61,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 $_SESSION['lname'] = $user['lname'];
                 $_SESSION['full_name'] = $user['fname'] . ' ' . $user['lname'];
                 
+<<<<<<< Updated upstream
+=======
+                // Redirect to dashboard
+>>>>>>> Stashed changes
                 header('Location: dashboard.php');
                 exit();
             } else {
@@ -63,7 +91,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <link rel="stylesheet" href="css/header.css">
 </head>
 <body>
-    <?php include '_includes/header.html'; ?>
+    <?php include '_includes/header.php'; ?>
     <div class="auth-container">
         <div class="auth-card">
             <div class="auth-header">
