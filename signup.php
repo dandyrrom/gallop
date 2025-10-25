@@ -1,11 +1,8 @@
 <?php
-
 require_once 'db/db_connect.php';
-
 
 $error_message = '';
 $success_message = '';
-
 // Handle signup form submission
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $first_name = trim($_POST['first_name'] ?? '');
@@ -35,14 +32,22 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         if ($check_result->num_rows > 0) {
             $error_message = 'Username or email already exists. Please choose another.';
         } else {
-            $hashed_password = password_hash($password, PASSWORD_DEFAULT); //if needed
+            //$hashed_password = password_hash($password, PASSWORD_DEFAULT); //if needed
             $role = 'user';
             $stmt = $conn->prepare("INSERT INTO user (userName, email, password, role, fname, lname, contactNum) VALUES (?, ?, ?, ?, ?, ?, ?)");
-            $stmt->bind_param("sssssss", $username, $email, $hashed_password, $role, $first_name, $last_name, $contact_number);
+<<<<<<< Updated upstream
+            $stmt->bind_param("sssssss", $username, $email, $password, $role, $first_name, $last_name, $contact_number);
             
+=======
+            $stmt->bind_param("sssssss", $username, $email, $hashed_password, $role, $first_name, $last_name, $contact_number);
+            $stmt->bind_param("sssssss", $username, $email, $password, $role, $first_name, $last_name, $contact_number);
+
+>>>>>>> Stashed changes
             if ($stmt->execute()) {
                 $success_message = 'Account created successfully! You can now Login.';
                 $_POST = array();
+                header('Location: login.php');
+                exit();
             } else {
                 $error_message = 'Error creating account. Please try again.';
             }
@@ -67,7 +72,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <link rel="stylesheet" href="css/header.css">
 </head>
 <body>
-    <?php include '_includes/header.html'; ?>
+    <?php include '_includes/header.php'; ?>
     <div class="auth-container">
         <div class="auth-card">
             <div class="auth-header">
