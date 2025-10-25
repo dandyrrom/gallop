@@ -1,14 +1,14 @@
 <?php
 session_start(); // Start the session at the very beginning
+require_once 'db/db_connect.php'; // Include the database connection
 
 // Check if the user is logged in
-// If 'user_id' is not set in the session, redirect to login.php
 if (!isset($_SESSION['user_id'])) {
-    header('Location: login.php'); // Redirect to the login page
-    exit; // Stop further script execution
+    header('Location: login.php');
+    exit;
 }
 
-// Get user details from session for easier use, with htmlspecialchars for security
+// Get user details from session
 $userId = $_SESSION['user_id'];
 $username = htmlspecialchars($_SESSION['username'] ?? 'User');
 $fname = htmlspecialchars($_SESSION['fname'] ?? '');
@@ -17,9 +17,18 @@ $email = htmlspecialchars($_SESSION['email'] ?? '');
 $contactNum = htmlspecialchars($_SESSION['contactNum'] ?? '');
 $role = htmlspecialchars($_SESSION['role'] ?? 'user');
 
-// Note: VK fetches contactNum separately; VD already has it. We use the VD version.
-// Note: VK defines $fullName; VD does not, but VK sidebar doesn't seem to use it.
-// Note: VK includes profile update messages logic; VD does not yet have this. Let's keep it out for now.
+// Fetch facilities for the dropdown
+$facilities = [];
+$facility_sql = "SELECT facilityId, name FROM facility ORDER BY name ASC";
+$facility_result = $conn->query($facility_sql);
+if ($facility_result && $facility_result->num_rows > 0) {
+    while ($row = $facility_result->fetch_assoc()) {
+        $facilities[] = $row;
+    }
+}
+// Note: It's good practice to close the connection if it's no longer needed,
+// but since we might need it later on the page (e.g., for bookings), we'll leave it open for now.
+// $conn->close(); // Example if closing
 
 ?>
 <!DOCTYPE html>
@@ -44,10 +53,10 @@ $role = htmlspecialchars($_SESSION['role'] ?? 'user');
 
     <!-- Component Styles -->
     <link rel="stylesheet" href="css/header.css">
-    <link rel="stylesheet" href="css/footer.css"> <!-- Keep link in case other parts need it, though footer removed below -->
+    <link rel="stylesheet" href="css/footer.css">
 
     <!-- Page-Specific Styles -->
-    <link rel="stylesheet" href="css/dashboard.css"> <!-- Assuming dashboard.css matches the visual style needed -->
+    <link rel="stylesheet" href="css/dashboard.css">
 
     <!-- Favicon -->
     <link rel="icon" href="assets/horse-head-faviconv.png" type="image/png">
@@ -55,22 +64,20 @@ $role = htmlspecialchars($_SESSION['role'] ?? 'user');
 </head>
 <body>
 
-    <!-- Include the specific dashboard header (Kept from VD) -->
+    <!-- Include the specific dashboard header -->
     <?php include '_includes/header_dashboard.php'; ?>
 
     <div class="dashboard-page-sidebar">
-        <!-- Sidebar Navigation (Copied structure from VK) -->
+        <!-- Sidebar Navigation (VK Structure) -->
         <aside class="dashboard-sidebar">
             <div class="user-info-sidebar text-center">
                 <div class="mb-2">
-                    <!-- Placeholder Icon/Image -->
                      <img src="https://placehold.co/80x80/5D4037/FFFFFF?text=<?php echo strtoupper(substr($fname, 0, 1)); ?>" alt="User Avatar" class="rounded-circle">
                 </div>
-                <h5 class="mb-1"><?php echo $fname; ?></h5>
+                <h5 class="mb-1"><?php echo $fname. ' ' . $lname; ?></h5>
                 <p class="mb-0"><?php echo $email; ?></p>
                 <p class="mb-0 text-muted small"><?php echo ucfirst($role); ?></p>
             </div>
-
             <nav class="sidebar-nav">
                 <ul class="nav flex-column">
                     <li class="nav-item">
@@ -89,7 +96,7 @@ $role = htmlspecialchars($_SESSION['role'] ?? 'user');
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" data-section="history"> <!-- Added History from VK -->
+                        <a class="nav-link" data-section="history">
                             <i class="bi bi-clock-history"></i> Booking History
                         </a>
                     </li>
@@ -98,7 +105,6 @@ $role = htmlspecialchars($_SESSION['role'] ?? 'user');
                             <i class="bi bi-person"></i> My Profile
                         </a>
                     </li>
-                    <!-- Logout button included in sidebar -->
                     <li class="nav-item mt-auto pt-3 border-top">
                          <a class="nav-link" href="logout.php">
                             <i class="bi bi-box-arrow-left"></i> Logout
@@ -108,93 +114,96 @@ $role = htmlspecialchars($_SESSION['role'] ?? 'user');
             </nav>
         </aside>
 
-        <!-- Main Content Area (Keep VD's content sections for now) -->
+        <!-- Main Content Area -->
         <main class="dashboard-content">
 
             <!-- == Overview Section == -->
             <section id="overview" class="content-section active">
+                <!-- Header part kept from VD -->
                 <div class="dashboard-header mb-4">
                     <h1 class="display-5 fw-bold">Welcome back, <?php echo $fname; ?>!</h1>
                     <p class="lead text-muted">Here's a quick look at your activity.</p>
                 </div>
-                <div class="row">
-                    <div class="col-lg-7">
-                        <div class="card dashboard-card">
-                            <div class="card-body">
-                                <h5 class="card-title"><i class="bi bi-calendar-event me-2"></i>Next Upcoming Booking</h5>
-                                <!-- Placeholder -->
-                                <div class="booking-item">
-                                    <div class="booking-item-icon"><i class="bi bi-person-workspace"></i></div>
-                                    <div class="booking-item-details">
-                                        <p class="fw-bold mb-0">Solo Space</p>
-                                        <p class="text-muted small mb-0">October 23, 2025 | 9:00 AM - 11:00 AM</p>
-                                    </div>
-                                    <div class="booking-item-actions ms-auto d-flex flex-column flex-sm-row gap-1">
-                                        <button class="btn btn-sm btn-outline-secondary" onclick="navigateToSection('bookings')">Details</button>
-                                        <button class="btn btn-sm btn-outline-danger">Cancel</button>
-                                    </div>
-                                </div>
-                                <div class="text-center pt-3 d-none">
-                                    <p class="text-muted mt-2 mb-3">You have no upcoming bookings.</p>
-                                    <button class="btn btn-primary" onclick="navigateToSection('book')">Book a Space</button>
-                                </div>
-                            </div>
-                        </div>
+
+                <!-- Content structure from VK -->
+                <h3 class="mb-4">Dashboard Overview</h3>
+                <div class="row g-4 mb-4">
+                    <!-- Stat Cards -->
+                    <div class="col-md-4">
+                        <div class="dashboard-card"><div class="card-body text-center"><i class="bi bi-calendar-check text-primary" style="font-size: 2.5rem;"></i><h5 class="card-title mt-3">Upcoming Bookings</h5><p class="h2 mb-0">2</p></div></div>
                     </div>
-                     <div class="col-lg-5">
-                         <div class="card dashboard-card">
-                            <div class="card-body">
-                                <h5 class="card-title"><i class="bi bi-bar-chart-line me-2"></i>Quick Stats</h5>
-                                <!-- Placeholders -->
-                                <p class="small text-muted mb-1">Total Bookings:</p>
-                                <h3 class="fw-bold">15</h3>
-                                <p class="small text-muted mb-1 mt-3">Hours Booked (This Month):</p>
-                                <h3 class="fw-bold">28</h3>
-                                <button class="btn btn-sm btn-outline-dark mt-3 w-100" onclick="navigateToSection('bookings')">View Booking History</button>
-                            </div>
-                        </div>
+                    <div class="col-md-4">
+                        <div class="dashboard-card"><div class="card-body text-center"><i class="bi bi-clock-history text-success" style="font-size: 2.5rem;"></i><h5 class="card-title mt-3">Past Bookings</h5><p class="h2 mb-0">5</p></div></div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="dashboard-card"><div class="card-body text-center"><i class="bi bi-star-fill text-warning" style="font-size: 2.5rem;"></i><h5 class="card-title mt-3">Favorite Space</h5><p class="favorite-space mb-0">Solo Space A</p></div></div>
+                    </div>
+                </div>
+                <div class="row">
+                    <!-- Upcoming Bookings List & Quick Actions -->
+                     <div class="col-lg-8">
+                        <div class="dashboard-card"><div class="card-body"><h5 class="card-title">Upcoming Bookings</h5><div class="booking-list"><div class="list-group-item d-flex justify-content-between align-items-center"><div><h6 class="mb-1">Solo Space A</h6><p class="mb-1 text-muted-custom small"><i class="bi bi-calendar-event me-1"></i> Oct 25, 2025 | <i class="bi bi-clock me-1"></i> 10:00 AM - 12:00 PM</p><span class="badge bg-success">Confirmed</span></div><div><button class="btn btn-sm btn-outline-primary" onclick="navigateToSection('bookings')">View</button></div></div><div class="list-group-item d-flex justify-content-between align-items-center"><div><h6 class="mb-1">Table Space 1</h6><p class="mb-1 text-muted-custom small"><i class="bi bi-calendar-event me-1"></i> Oct 28, 2025 | <i class="bi bi-clock me-1"></i> 2:00 PM - 4:00 PM</p><span class="badge bg-warning text-dark">Pending</span></div><div><button class="btn btn-sm btn-outline-primary" onclick="navigateToSection('bookings')">View</button></div></div><div class="list-group-item text-center d-none"><p class="text-muted mt-2 mb-0">No upcoming bookings found.</p></div></div></div></div>
+                    </div>
+                    <div class="col-lg-4">
+                        <div class="dashboard-card"><div class="card-body"><h5 class="card-title">Quick Actions</h5><div class="d-grid gap-2"><button class="btn btn-primary" onclick="navigateToSection('book')"><i class="bi bi-calendar-plus me-2"></i> Book Now</button><button class="btn btn-outline-primary" onclick="navigateToSection('bookings')"><i class="bi bi-calendar-check me-2"></i> View Bookings</button><button class="btn btn-outline-primary" onclick="navigateToSection('profile')"><i class="bi bi-person me-2"></i> Edit Profile</button></div></div></div>
                     </div>
                 </div>
             </section>
 
              <!-- == Book a Space Section == -->
             <section id="book" class="content-section">
-                <h1 class="mb-4">Book a Space</h1>
+                 <h3 class="mb-4">Book a Workspace</h3>
                 <div class="card dashboard-card">
                     <div class="card-body">
                         <h5 class="card-title"><i class="bi bi-search me-2"></i>Find Available Spaces</h5>
-                        <form>
-                            <div class="row g-3 align-items-end">
-                                <div class="col-md-4">
+                        <!-- Make this form POST to a booking handler later -->
+                        <form id="booking-form" method="POST" action="process_booking.php"> <!-- Example action -->
+                            <div class="row g-3 mb-3">
+                                <div class="col-md-6">
+                                    <label for="book-facility" class="form-label">Select Facility</label>
+                                    <select class="form-select" id="book-facility" name="facility_id" required>
+                                        <option value="" selected disabled>Choose a workspace...</option>
+                                        <?php if (!empty($facilities)): ?>
+                                            <?php foreach ($facilities as $facility): ?>
+                                                <option value="<?php echo htmlspecialchars($facility['facilityId']); ?>">
+                                                    <?php echo htmlspecialchars($facility['name']); ?>
+                                                </option>
+                                            <?php endforeach; ?>
+                                        <?php else: ?>
+                                            <option value="" disabled>No facilities found</option>
+                                        <?php endif; ?>
+                                    </select>
+                                </div>
+                                <div class="col-md-6">
                                     <label for="book-date" class="form-label">Date</label>
-                                    <input type="date" class="form-control" id="book-date" value="">
+                                    <input type="date" class="form-control" id="book-date" name="booking_date" required>
                                 </div>
-                                <div class="col-md-3">
+                                <div class="col-md-6">
                                     <label for="book-start-time" class="form-label">Start Time</label>
-                                    <input type="time" class="form-control" id="book-start-time" step="1800" value="09:00">
+                                    <input type="time" class="form-control" id="book-start-time" name="start_time" step="1800" required> <!-- 30 min steps -->
                                 </div>
-                                 <div class="col-md-3">
+                                <div class="col-md-6">
                                     <label for="book-end-time" class="form-label">End Time</label>
-                                    <input type="time" class="form-control" id="book-end-time" step="1800" value="11:00">
+                                    <input type="time" class="form-control" id="book-end-time" name="end_time" step="1800" required>
                                 </div>
-                                <div class="col-md-2">
-                                    <button type="button" class="btn btn-primary w-100">Search</button>
+                                <div class="col-md-12">
+                                    <label for="book-pax" class="form-label">Number of People</label>
+                                    <input type="number" class="form-control" id="book-pax" name="num_pax" min="1" value="1" required>
                                 </div>
                             </div>
+                            <!-- Search button can be removed if submitting the form directly searches/books -->
+                             <!-- Or change type to button and use JS/AJAX -->
+                            <button type="submit" class="btn btn-primary">Check Availability & Book</button>
                         </form>
+
                         <hr class="my-4">
-                        <h6 class="text-muted mb-3">Available Spaces for [Date] from [Start Time] to [End Time]:</h6>
-                        <!-- Placeholder -->
-                        <div class="list-group">
-                            <a href="#" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
-                                <div><h6 class="mb-1 fw-bold">Solo Space 1</h6><small class="text-muted">Capacity: 1 | Features: Monitor, Coffee</small></div>
-                                <span class="badge bg-success rounded-pill">Available</span>
-                            </a>
-                             <a href="#" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
-                                <div><h6 class="mb-1 fw-bold">Table Space A</h6><small class="text-muted">Capacity: 4 | Features: TV, Whiteboard</small></div>
-                                <span class="badge bg-success rounded-pill">Available</span>
-                            </a>
-                            <div class="list-group-item text-center text-muted d-none">No spaces available.</div>
+                        <h6 class="text-muted mb-3">Available Spaces (Results Placeholder):</h6>
+                        <!-- Placeholder for search results -->
+                        <div id="availability-results" class="list-group">
+                            <!-- Results will be loaded here later -->
+                             <div class="list-group-item text-center text-muted">
+                                Please select criteria and check availability.
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -202,29 +211,17 @@ $role = htmlspecialchars($_SESSION['role'] ?? 'user');
 
             <!-- == My Bookings Section == -->
             <section id="bookings" class="content-section">
-                <h1 class="mb-4">My Bookings</h1>
-                <div class="card dashboard-card">
+                <!-- Content remains placeholder -->
+                <h3 class="mb-4">My Active Bookings</h3>
+                <div class="dashboard-card">
                     <div class="card-body">
-                        <h5 class="card-title"><i class="bi bi-calendar-check me-2"></i>Upcoming Bookings</h5>
-                        <!-- Placeholder -->
-                        <div class="booking-list mb-4">
-                            <div class="booking-item">
-                                <div class="booking-item-icon"><i class="bi bi-person-workspace"></i></div>
-                                <div class="booking-item-details"><p class="fw-bold mb-0">Solo Space</p><p class="text-muted small mb-0">October 23, 2025 | 9:00 AM - 11:00 AM</p></div>
-                                <div class="booking-item-actions ms-auto d-flex flex-column flex-sm-row gap-1"><button class="btn btn-sm btn-outline-secondary">Details</button><button class="btn btn-sm btn-outline-danger">Cancel</button></div>
-                            </div>
-                             <div class="text-center pt-3 d-none"><p class="text-muted mt-4">You have no upcoming bookings.</p><button class="btn btn-primary btn-sm mt-2" onclick="navigateToSection('book')">Book a Space</button></div>
-                        </div>
-                         <hr>
-                         <!-- NOTE: VD Merged history here, but VK has it separate. Keeping VD structure for now -->
-                         <h5 class="card-title mt-4"><i class="bi bi-clock-history me-2"></i>Booking History</h5>
-                         <!-- Placeholder -->
-                         <div class="table-responsive">
-                            <table class="table table-striped table-hover small align-middle">
-                                <thead><tr><th>Space</th><th>Date</th><th>Time</th><th>Status</th><th>Action</th></tr></thead>
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead><tr><th>Booking ID</th><th>Facility</th><th>Date</th><th>Time</th><th>Pax</th><th>Status</th><th>Actions</th></tr></thead>
                                 <tbody>
-                                    <tr><td>Board Room</td><td>Oct 15, 2025</td><td>10:00 AM - 12:00 PM</td><td><span class="badge bg-success">Completed</span></td><td><a href="#" class="btn btn-sm btn-link text-decoration-none p-0">View</a></td></tr>
-                                    <tr class="d-none"><td colspan="5" class="text-center text-muted py-3">No past bookings found.</td></tr>
+                                    <tr><td>#1001</td><td>Solo Space A</td><td>Oct 25, 2025</td><td>10:00 AM - 12:00 PM</td><td>1</td><td><span class="badge bg-success">Confirmed</span></td><td><button class="btn btn-sm btn-outline-primary">View</button> <button class="btn btn-sm btn-outline-danger">Cancel</button></td></tr>
+                                    <tr><td>#1002</td><td>Table Space 1</td><td>Oct 28, 2025</td><td>2:00 PM - 4:00 PM</td><td>4</td><td><span class="badge bg-warning text-dark">Pending</span></td><td><button class="btn btn-sm btn-outline-primary">View</button> <button class="btn btn-sm btn-outline-danger">Cancel</button></td></tr>
+                                    <tr class="d-none"><td colspan="7" class="text-center text-muted">No active bookings.</td></tr>
                                 </tbody>
                             </table>
                         </div>
@@ -232,27 +229,35 @@ $role = htmlspecialchars($_SESSION['role'] ?? 'user');
                 </div>
             </section>
 
-             <!-- == Booking History Section (From VK, separate) == -->
+             <!-- == Booking History Section == -->
              <section id="history" class="content-section">
-                <h3 class="mb-4">Booking History</h3>
-                <div class="dashboard-card">
-                    <div class="card-body">
-                        <!-- Placeholder - Content from VK's history section would go here -->
-                        <p>Placeholder for Booking History Table (similar to the one in VD's 'My Bookings' section).</p>
-                    </div>
-                </div>
+                 <!-- Content remains placeholder -->
+                 <h3 class="mb-4">Booking History</h3>
+                 <div class="dashboard-card">
+                     <div class="card-body">
+                         <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead><tr><th>Booking ID</th><th>Facility</th><th>Date</th><th>Time</th><th>Status</th></tr></thead>
+                                <tbody>
+                                    <tr><td>#998</td><td>Board Room Executive</td><td>Oct 10, 2025</td><td>9:00 AM - 11:00 AM</td><td><span class="badge bg-secondary">Completed</span></td></tr>
+                                    <tr><td>#997</td><td>Solo Space A</td><td>Oct 5, 2025</td><td>1:00 PM - 3:00 PM</td><td><span class="badge bg-secondary">Completed</span></td></tr>
+                                     <tr class="d-none"><td colspan="5" class="text-center text-muted">No past bookings.</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                     </div>
+                 </div>
             </section>
 
             <!-- == My Profile Section == -->
             <section id="profile" class="content-section">
+                 <!-- Content remains mostly placeholder/mock JS -->
                  <h1 class="mb-4">My Profile</h1>
                 <div class="card dashboard-card">
                     <div class="card-body">
                          <div class="d-flex justify-content-between align-items-center mb-3">
                              <h5 class="card-title mb-0"><i class="bi bi-person-badge me-2"></i>Account Details</h5>
-                             <button id="edit-profile-button" class="btn btn-outline-dark btn-sm" onclick="toggleEditProfile(true)">
-                                <i class="bi bi-pencil-square me-1"></i> Edit Profile
-                             </button>
+                             <button id="edit-profile-button" class="btn btn-outline-dark btn-sm" onclick="toggleEditProfile(true)"><i class="bi bi-pencil-square me-1"></i> Edit Profile</button>
                          </div>
                          <div id="profile-display" class="profile-details">
                             <p><strong>First Name:</strong> <span data-field="fname"><?php echo $fname; ?></span></p>
@@ -263,7 +268,6 @@ $role = htmlspecialchars($_SESSION['role'] ?? 'user');
                             <p><strong>Password:</strong> ******** <button type="button" class="btn btn-sm btn-link p-0 ms-2">(Change)</button></p>
                          </div>
                          <form id="profile-edit-form" class="d-none mt-3">
-                            <!-- Note: The action='functions/update_profile.php' from VK is removed for now, just using JS mock -->
                             <div class="alert alert-success d-none" role="alert" id="profile-success-message">Profile updated successfully!</div>
                             <div class="alert alert-danger d-none" role="alert" id="profile-error-message">Error updating profile. Please try again.</div>
                             <div class="row g-3 mb-3">
@@ -285,7 +289,15 @@ $role = htmlspecialchars($_SESSION['role'] ?? 'user');
     <!-- Bootstrap JS -->
      <script src="js/bootstrap.bundle.min.js"></script>
      <!-- Dashboard Specific JS -->
-     <script src="js/dashboard.js"></script> <!-- Ensure dashboard.js is updated if needed -->
+     <script src="js/dashboard.js"></script>
+     <script>
+        // Add minimum date for date picker in booking section
+        document.addEventListener('DOMContentLoaded', () => {
+            const dateInput = document.getElementById('book-date');
+            if (dateInput) {
+                dateInput.min = new Date().toISOString().split('T')[0];
+            }
+        });
+     </script>
 </body>
 </html>
-

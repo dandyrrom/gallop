@@ -7,7 +7,7 @@
 <div id="header-placeholder">
     <a href="dashboard.php" class="header-logo"><img src="assets/Gallop-Project-Logo.svg" alt="Gallop Logo" style="height: 40px;"></a>
     <div class="header-user">
-         <span>Welcome, <?php echo isset($fname) ? htmlspecialchars($fname) : 'User'; ?></span> <!-- Use $fname from dashboard.php -->
+         <span>Welcome, <?php echo isset($fname) ? htmlspecialchars($fname) : 'User'; ?>!</span> <!-- Use $fname from dashboard.php -->
          <!-- Logout button/link might go here later or in sidebar -->
     </div>
 </div>
